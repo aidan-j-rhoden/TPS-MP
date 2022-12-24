@@ -39,7 +39,9 @@ func _on_join_pressed():
 		return
 
 	var ip = get_node("connect/v_box_container/h_box_container4/ip").text
-	if not ip.is_valid_ip_address():
+	if ip == "":
+		ip = "127.0.0.1"
+	elif not ip.is_valid_ip_address():
 		get_node("connect/v_box_container/h_box_container5/error_label").text = "Invalid IPv4 address!"
 		return
 

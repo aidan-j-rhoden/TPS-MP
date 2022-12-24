@@ -156,6 +156,8 @@ remotesync func reload():
 
 
 remotesync func create_impact(scn, scn_fx, result, from):
+	if scn is EncodedObjectAsID or scn_fx is EncodedObjectAsID:
+		return
 	var impact = scn.instance()
 	result.collider.add_child(impact)
 	impact.global_transform.origin = result.position

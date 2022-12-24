@@ -1,5 +1,6 @@
 extends Control
 
+var send_to_server = false
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -51,7 +52,6 @@ func _on_join_pressed():
 
 	var player_name = get_node("connect/v_box_container/h_box_container2/name").text
 	gamestate.join_game(ip, player_name)
-	# refresh_lobby() gets called by the player_list_changed signal
 
 
 func _on_connection_success():
@@ -86,11 +86,18 @@ func refresh_lobby():
 	for p in players:
 		get_node("players/list").add_item(p)
 
-	get_node("players/start").disabled = not get_tree().is_network_server()
+
+	if players.size() == 1 and not get_tree().is_network_server():
+		send_to_server = true
+	elif not send_to_server:
+		get_node("players/start").disabled = not get_tree().is_network_server()
 
 
 func _on_start_pressed():
-	gamestate.begin_game()
+	if send_to_server:
+		rpc_id(1, "start_game", gamestate.get_player_name())
+	else:
+		gamestate.begin_game()
 
 
 func _on_round_time_text_changed(new_text):

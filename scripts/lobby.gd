@@ -52,6 +52,7 @@ func _on_join_pressed():
 
 	var player_name = get_node("connect/v_box_container/h_box_container2/name").text
 	gamestate.join_game(ip, player_name)
+	refresh_lobby()
 
 
 func _on_connection_success():
@@ -86,9 +87,9 @@ func refresh_lobby():
 	for p in players:
 		get_node("players/list").add_item(p)
 
-
-	if players.size() == 1 and not get_tree().is_network_server():
+	if players.size() == 0 and not get_tree().is_network_server():
 		send_to_server = true
+		get_node("players/start").disabled = false
 	elif not send_to_server:
 		get_node("players/start").disabled = not get_tree().is_network_server()
 

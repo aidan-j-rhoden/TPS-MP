@@ -171,8 +171,9 @@ func _init():
 func _physics_process(delta):
 	if not is_dead and Input.is_action_just_pressed("damage"): #Debug only
 		rpc("hurt", 10)
-	health_bar.value = health
-	kill_counter.text = str(kill_count)
+	if is_network_master():
+		health_bar.value = health
+		kill_counter.text = str(kill_count)
 	game_timer_label.text = get_time_left()
 	if is_network_master():
 		if not is_dead:
@@ -181,10 +182,10 @@ func _physics_process(delta):
 			process_movement(delta)
 		rpc_unreliable("process_animations", is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
 		rpc("check_weapons")
-	if global_transform.origin.y < -12:
-		falling_to_death = true
-		die()
-#		rpc("die")
+		if global_transform.origin.y < -12:
+			falling_to_death = true
+#			die()
+			rpc("die")
 
 
 func _input(event):

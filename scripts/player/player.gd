@@ -184,8 +184,8 @@ func _physics_process(delta):
 		rpc("check_weapons")
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-#			die()
-			rpc("die")
+			die()
+#			rpc("die")
 
 
 func _input(event):

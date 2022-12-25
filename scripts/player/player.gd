@@ -552,9 +552,10 @@ remotesync func hurt(damage):
 
 func die():
 	if !is_dead:
-		$hud/death_canvas.visible = true
-		$hud/death_canvas/animation_player.play("die")
-		kill_count -= 1
+		if is_network_master():
+			$hud/death_canvas.visible = true
+			$hud/death_canvas/animation_player.play("die")
+			kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")
 		hit_player.stream = body_splat

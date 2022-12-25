@@ -541,6 +541,7 @@ remotesync func hurt(damage):
 
 remotesync func die():
 	if !is_dead:
+		$hud/death_canvas.visible = true
 		kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")
@@ -593,6 +594,7 @@ func _on_timer_respawn_timeout():
 
 
 remotesync func respawn():
+	$hud/death_canvas.visible = false
 	get_node("shape").disabled = false
 	falling_to_death = false
 	is_dead = false

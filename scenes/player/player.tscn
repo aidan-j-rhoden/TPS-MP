@@ -6677,7 +6677,7 @@ nodes/pistol_aim_right/node = SubResource( 56 )
 nodes/pistol_aim_right/position = Vector2( 280, 1360 )
 nodes/pistol_aim_up/node = SubResource( 57 )
 nodes/pistol_aim_up/position = Vector2( 800, 1300 )
-node_connections = [ "output", 0, "pistol_aim_blend", "aim_dir_y_blend", 0, "aim_left", "aim_dir_y_blend", 1, "aim_center", "aim_dir_y_blend", 2, "aim_right", "pistol_aim_dir_x_blend", 0, "pistol_aim_down", "pistol_aim_dir_x_blend", 1, "pistol_aim_dir_y_blend", "pistol_aim_dir_x_blend", 2, "pistol_aim_up", "pistol_aim_dir_y_blend", 0, "pistol_aim_left", "pistol_aim_dir_y_blend", 1, "pistol_aim_center", "pistol_aim_dir_y_blend", 2, "pistol_aim_right", "pistol_aim_blend", 0, "aim_blend", "pistol_aim_blend", 1, "pistol_aim_dir_x_blend", "aim_dir_x_blend", 0, "aim_down", "aim_dir_x_blend", 1, "aim_dir_y_blend", "aim_dir_x_blend", 2, "aim_up", "aim_blend", 0, "locomotion", "aim_blend", 1, "aim_dir_x_blend" ]
+node_connections = [ "output", 0, "pistol_aim_blend", "aim_blend", 0, "locomotion", "aim_blend", 1, "aim_dir_x_blend", "aim_dir_x_blend", 0, "aim_down", "aim_dir_x_blend", 1, "aim_dir_y_blend", "aim_dir_x_blend", 2, "aim_up", "aim_dir_y_blend", 0, "aim_left", "aim_dir_y_blend", 1, "aim_center", "aim_dir_y_blend", 2, "aim_right", "pistol_aim_blend", 0, "aim_blend", "pistol_aim_blend", 1, "pistol_aim_dir_x_blend", "pistol_aim_dir_x_blend", 0, "pistol_aim_down", "pistol_aim_dir_x_blend", 1, "pistol_aim_dir_y_blend", "pistol_aim_dir_x_blend", 2, "pistol_aim_up", "pistol_aim_dir_y_blend", 0, "pistol_aim_left", "pistol_aim_dir_y_blend", 1, "pistol_aim_center", "pistol_aim_dir_y_blend", 2, "pistol_aim_right" ]
 
 [sub_resource type="AnimationNodeAnimation" id=59]
 animation = "car_drive"
@@ -6824,7 +6824,7 @@ shape = SubResource( 1 )
 transform = Transform( 0.3, 0, 0, 0, -4.88762e-08, -0.3, 0, 0.3, -4.88762e-08, 0, 4.37114e-08, -1 )
 
 [node name="root" type="Spatial" parent="shape/cube"]
-transform = Transform( 0.995115, 0.0449391, -0.0878969, -0.0386265, 0.996639, 0.0722456, 0.0908481, -0.0684975, 0.993506, -0.0935103, -0.0250768, 0.211691 )
+transform = Transform( 0.995069, 0.0482662, -0.0866459, -0.042582, 0.996891, 0.0662944, 0.0895763, -0.0622779, 0.994031, -0.103777, -0.0273454, 0.189309 )
 
 [node name="mesh" type="MeshInstance" parent="shape/cube/root"]
 transform = Transform( 1, -9.77889e-09, 1.49012e-08, 1.39698e-09, 1, -3.72529e-09, 7.45058e-09, 0, 1, 0, 0, 0 )
@@ -6995,7 +6995,7 @@ bones/31/enabled = true
 bones/31/bound_children = [  ]
 
 [node name="bone_attachment" type="BoneAttachment" parent="shape/cube/root/skeleton"]
-transform = Transform( 0.482273, 0.0609295, 0.873899, 0.0374735, -0.998101, 0.0489075, 0.875221, 0.00916121, -0.483641, -1.29435, 3.08189, 0.281145 )
+transform = Transform( 0.495366, 0.0774723, 0.865222, 0.0250633, -0.996876, 0.0749099, 0.868324, -0.0154224, -0.495761, -1.2651, 3.06798, 0.281795 )
 bone_name = "hand_r"
 
 [node name="weapon" type="Spatial" parent="shape/cube/root/skeleton/bone_attachment"]
@@ -7192,6 +7192,13 @@ margin_bottom = 381.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 88 )
 text = "Silly Man Sam killed you!"
+
+[node name="death_canvas" type="ColorRect" parent="hud"]
+visible = false
+show_behind_parent = true
+margin_right = 1280.0
+margin_bottom = 720.0
+color = Color( 0.701961, 0, 0, 0.627451 )
 
 [node name="audio" type="Spatial" parent="."]
 

@@ -566,6 +566,7 @@ remotesync func die():
 
 		is_dead = true
 		get_node("timer_respawn").start()
+		get_node("shape").disabled = true
 
 
 func set_health(value):
@@ -592,6 +593,7 @@ func _on_timer_respawn_timeout():
 
 
 remotesync func respawn():
+	get_node("shape").disabled = false
 	falling_to_death = false
 	is_dead = false
 	set_health(100)

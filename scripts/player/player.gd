@@ -158,6 +158,8 @@ func _ready():
 		camera.current = true
 		crosshair.visible = true
 
+	get_tree().get_root().connect("size_changed", self, "resize_viewport")
+
 
 func _init():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -188,6 +190,10 @@ func _input(event):
 		camera_x_rot = clamp(camera_x_rot + event.relative.y * CAMERA_ROTATION_SPEED, deg2rad(CAMERA_X_ROT_MIN), deg2rad(CAMERA_X_ROT_MAX))
 		camera_y_rot = clamp(camera_y_rot + event.relative.x * CAMERA_ROTATION_SPEED, deg2rad(CAMERA_X_ROT_MIN), deg2rad(CAMERA_X_ROT_MAX))
 		get_node("camera_base/rotation").rotation.x = camera_x_rot
+
+
+func resize_viewport():
+	$hud/death_canvas.rect_size = get_viewport().size
 
 
 func process_input(delta):

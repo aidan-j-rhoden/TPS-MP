@@ -1,11 +1,11 @@
 extends Spatial
 
-export var ray_length = 1250
+export var ray_length = 750
 export var knockback_multiplier = 25
 export var fire_delay = 0.9
 export var bullets = 1
 export var spread = 2
-export var DAMAGE = 30
+export var DAMAGE = 35
 export var fov = 40
 var timer_fire = 0
 var can_fire = true

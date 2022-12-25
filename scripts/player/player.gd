@@ -107,6 +107,9 @@ func _ready():
 	health_bar = $hud/health
 	game_timer_label = $hud/game_timer_label
 
+	resize_viewport()
+	$hud/death_canvas.visible = false
+
 	camera_target_initial = target.transform.origin
 	crosshair_color_initial = crosshair.modulate
 	fov_initial = camera.fov
@@ -259,6 +262,7 @@ func process_input(delta):
 		var camera_target = camera_target_initial
 		var crosshair_alpha = 0.0
 		fov = fov_initial
+		
 
 		current_aim = false
 
@@ -548,6 +552,7 @@ remotesync func hurt(damage):
 remotesync func die():
 	if !is_dead:
 		$hud/death_canvas.visible = true
+		$hud/death_canvas/animation_player.play("die")
 		kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")

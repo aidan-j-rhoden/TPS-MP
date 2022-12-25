@@ -346,6 +346,7 @@ func process_sounds():
 			if b is Player:
 				if driver:
 					driver.kill_count += 1
+					b.rpc("killed_you", gamestate.get_player_name())
 				b.rpc("die")
 
 	if bodies.size() > 0 and abs(prev_lvl - lvl) > 0.5:

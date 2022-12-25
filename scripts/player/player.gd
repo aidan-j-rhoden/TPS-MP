@@ -603,3 +603,10 @@ remotesync func respawn():
 	for i in self.get_children():
 		if i is Wound:
 			i.queue_free()
+
+
+remotesync func killed_you(name):
+	$hud/who_killed.text = name + " killed you!"
+	$hud/who_killed.visible = true
+	yield(get_tree().create_timer(4), "timeout")
+	$hud/who_killed.visible = false

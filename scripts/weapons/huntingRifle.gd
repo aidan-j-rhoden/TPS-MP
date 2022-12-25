@@ -113,6 +113,7 @@ remotesync func fire():
 #					result.collider.rpc("hit", DAMAGE, (result.position - global_transform.origin).normalized() * knockback_multiplier) #Should this line even be here?
 					if result.collider.health <= DAMAGE and not result.collider.is_dead:
 						shooter.kill_count += 2
+						result.collider.rpc("killed_you", gamestate.get_player_name())
 					result.collider.rpc("hurt", DAMAGE)
 #					var position = result.position - result.collider.global_transform.origin
 #					var impulse = (result.position - global_transform.origin).normalized()
@@ -122,6 +123,7 @@ remotesync func fire():
 					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 					if result.collider.health <= DAMAGE and not result.collider.is_dead:
 						shooter.kill_count += 2
+						result.collider.rpc("killed_you", gamestate.get_player_name())
 					result.collider.rpc("hurt", DAMAGE)
 				if result.collider is RigidBody and not result.collider is Gibs:
 					var position = result.position - result.collider.global_transform.origin

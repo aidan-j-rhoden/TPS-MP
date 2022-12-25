@@ -183,7 +183,8 @@ func _physics_process(delta):
 		rpc("check_weapons")
 	if global_transform.origin.y < -12:
 		falling_to_death = true
-		rpc("die")
+		die()
+#		rpc("die")
 
 
 func _input(event):
@@ -549,7 +550,7 @@ remotesync func hurt(damage):
 	voice_player.play()
 
 
-remotesync func die():
+func die():
 	if !is_dead:
 		$hud/death_canvas.visible = true
 		$hud/death_canvas/animation_player.play("die")
@@ -584,8 +585,8 @@ remotesync func die():
 func set_health(value):
 	health = value
 	if health <= 0:
-		#die()
-		rpc("die")
+		die()
+#		rpc("die")
 
 
 func get_time_left():
@@ -618,7 +619,7 @@ remotesync func respawn():
 			i.queue_free()
 
 
-remotesync func killed_you(name):
+remote func killed_you(name):
 	$hud/who_killed.text = name + " killed you!"
 	$hud/who_killed.visible = true
 	yield(get_tree().create_timer(4), "timeout")

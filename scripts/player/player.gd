@@ -56,7 +56,7 @@ onready var kill_counter = $hud/kill_count
 onready var who_killed = $hud/who_killed
 onready var death_canvas = $hud/death_canvas
 var kill_count = 0
-var game_timer_label = $hud/game_timer_label
+onready var game_timer_label = $hud/game_timer_label
 
 # Force
 const GRAB_DISTANCE = 50
@@ -183,8 +183,8 @@ func _physics_process(delta):
 		rpc("check_weapons")
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-			die()
-#			rpc("die")
+#			die()
+			rpc("die")
 
 
 func _input(event):
@@ -550,11 +550,11 @@ remotesync func hurt(damage):
 	voice_player.play()
 
 
-func die():
+remotesync func die():
 	if !is_dead:
 		if is_network_master():
 			death_canvas.visible = true
-			death_canvas/animation_player.play("die")
+			death_canvas.animation_player.play("die")
 			kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")
@@ -586,8 +586,8 @@ func die():
 func set_health(value):
 	health = value
 	if health <= 0:
-		die()
-#		rpc("die")
+#		die()
+		rpc("die")
 
 
 func get_time_left():

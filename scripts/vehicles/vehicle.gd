@@ -145,6 +145,8 @@ func _ready():
 	brakes_player = get_node("audio/breaks")
 	air_player = get_node("audio/air")
 	air_player.stream = air_sound
+	if not is_network_master():
+		hud.visible = false
 	
 	# Skids
 	skid_scn = preload("res://scenes/misc/skid.tscn")

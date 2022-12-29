@@ -119,8 +119,10 @@ remotesync func fire():
 #					var position = result.position - result.collider.global_transform.origin
 #					var impulse = (result.position - global_transform.origin).normalized()
 #					result.collider.apply_impulse(position, impulse * knockback_multiplier)
+					result.collider.rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 				if result.collider is KinematicBody and result.collider.get_parent() is VehicleBody:
+					result.collider.rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 					if result.collider.health <= DAMAGE and not result.collider.is_dead:
 						shooter.kill_count += 2

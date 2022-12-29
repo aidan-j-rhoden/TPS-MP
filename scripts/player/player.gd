@@ -51,7 +51,7 @@ var fov_initial
 var fov
 
 #HUD
-var health_bar: ProgressBar
+onready var health_bar = $hud/health
 var kill_counter: Label
 var kill_count = 0
 var game_timer_label: Label
@@ -104,7 +104,6 @@ func _ready():
 	target = get_node("camera_base/rotation/target")
 	crosshair = get_node("hud/crosshair")
 	kill_counter = $hud/kill_count
-	health_bar = $hud/health
 	game_timer_label = $hud/game_timer_label
 
 	resize_viewport()
@@ -171,11 +170,10 @@ func _init():
 func _physics_process(delta):
 	if not is_dead and Input.is_action_just_pressed("damage"): #Debug only
 		rpc("hurt", 10)
+	game_timer_label.text = get_time_left()
 	if is_network_master():
 		health_bar.value = health
 		kill_counter.text = str(kill_count)
-	game_timer_label.text = get_time_left()
-	if is_network_master():
 		if not is_dead:
 			process_input(delta)
 		if !is_in_vehicle and not is_dead:
@@ -608,17 +606,18 @@ func _on_timer_respawn_timeout():
 
 
 remotesync func respawn():
-	$hud/death_canvas.visible = false
-	get_node("shape").disabled = false
-	falling_to_death = false
-	is_dead = false
-	set_health(100)
-	vel = Vector3()
-	global_transform.origin = main_scn.get_node("spawn_points").get_child(randi() % main_scn.get_node("spawn_points").get_child_count()).global_transform.origin
-	visible = true
-	for i in self.get_children():
-		if i is Wound:
-			i.queue_free()
+	if is_network_master():
+		$hud/death_canvas.visible = false
+		get_node("shape").disabled = false
+		falling_to_death = false
+		is_dead = false
+		set_health(100)
+		vel = Vector3()
+		global_transform.origin = main_scn.get_node("spawn_points").get_child(randi() % main_scn.get_node("spawn_points").get_child_count()).global_transform.origin
+		visible = true
+		for i in self.get_children():
+			if i is Wound:
+				i.queue_free()
 
 
 remote func killed_you(name):
@@ -626,3 +625,20 @@ remote func killed_you(name):
 	$hud/who_killed.visible = true
 	yield(get_tree().create_timer(4), "timeout")
 	$hud/who_killed.visible = false
+
+
+remotesync func create_impact(scn, scn_fx, result, from):
+	if scn is EncodedObjectAsID or scn_fx is EncodedObjectAsID:
+		return
+	var impact = scn.instance()
+	self.add_child(impact)
+	impact.global_transform.origin = result.position
+	impact.global_transform = utils.look_at_with_z(impact.global_transform, result.normal, from)
+	randomize()
+	impact.rotation = Vector3(impact.rotation.x, impact.rotation.y, rand_range(-180, 180))
+
+	var impact_fx = scn_fx.instance()
+	get_tree().root.add_child(impact_fx)
+	impact_fx.global_transform.origin = result.position
+	impact_fx.emitting = true
+	impact_fx.global_transform = utils.look_at_with_x(impact_fx.global_transform, result.normal, from)

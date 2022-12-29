@@ -553,7 +553,7 @@ remotesync func die():
 	if !is_dead:
 		if is_network_master():
 			death_canvas.visible = true
-			death_canvas.animation_player.play("die")
+			$hud/death_canvas/animation_player.play("die")
 			kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")

@@ -141,3 +141,15 @@ transform = Transform( 7.67941e-07, -1.47525, -1.03466e-06, 1.47525, 8.11907e-07
 visible = false
 mesh = SubResource( 5 )
 skeleton = NodePath("../..")
+
+[node name="m40a3_cheekwell" parent="." index="1"]
+visible = false
+
+[node name="m40a3_bolt" parent="." index="2"]
+visible = false
+
+[node name="m40a3_TA31RCO_Acog" parent="." index="3"]
+visible = false
+
+[node name="m40a3_x16scope" parent="." index="4"]
+visible = false

@@ -182,9 +182,6 @@ transform = Transform( 0.361445, 0, 0.932393, 0, 1, 0, -0.932393, 0, 0.361445, 5
 
 [node name="weapons" type="Node" parent="."]
 
-[node name="SniperOther" parent="weapons" instance=ExtResource( 8 )]
-transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, 0.891379, 0.961935, 4.32339 )
-
 [node name="glock_2" parent="weapons" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.08353, 5.41368, -8.45401 )
 
@@ -193,6 +190,18 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44143, -0.09903, -17.7662 )
 
 [node name="glock_3" parent="weapons" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8385, -0.09903, -17.7662 )
+
+[node name="glock_4" parent="weapons" instance=ExtResource( 4 )]
+transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, 336.675, 18.9285, 119.958 )
+
+[node name="SniperOther" parent="weapons" instance=ExtResource( 8 )]
+transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, 48.4171, 0.306088, 21.0635 )
+
+[node name="glock_5" parent="weapons" instance=ExtResource( 4 )]
+transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, -304.921, 2.15984, -198.868 )
+
+[node name="glock_6" parent="weapons" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 321.673, 1.05242, -171.517 )
 
 [node name="truck" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.87661, 0.595084, 0.674341 )

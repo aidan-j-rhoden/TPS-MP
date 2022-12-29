@@ -52,9 +52,11 @@ var fov
 
 #HUD
 onready var health_bar = $hud/health
-var kill_counter: Label
+onready var kill_counter = $hud/kill_count
+onready var who_killed = $hud/who_killed
+onready var death_canvas = $hud/death_canvas
 var kill_count = 0
-var game_timer_label: Label
+onready var game_timer_label = $hud/game_timer_label
 
 # Force
 const GRAB_DISTANCE = 50
@@ -103,11 +105,9 @@ func _ready():
 	camera = get_node("camera_base/rotation/target/camera")
 	target = get_node("camera_base/rotation/target")
 	crosshair = get_node("hud/crosshair")
-	kill_counter = $hud/kill_count
-	game_timer_label = $hud/game_timer_label
 
 	resize_viewport()
-	$hud/death_canvas.visible = false
+	death_canvas.visible = false
 
 	camera_target_initial = target.transform.origin
 	crosshair_color_initial = crosshair.modulate
@@ -182,8 +182,8 @@ func _physics_process(delta):
 		rpc("check_weapons")
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-			die()
-#			rpc("die")
+#			die()
+			rpc("die")
 
 
 func _input(event):
@@ -196,7 +196,7 @@ func _input(event):
 
 
 func resize_viewport():
-	$hud/death_canvas.rect_size = get_viewport().size
+	death_canvas.rect_size = get_viewport().size
 
 
 func process_input(delta):
@@ -549,11 +549,11 @@ remotesync func hurt(damage):
 	voice_player.play()
 
 
-func die():
+remotesync func die():
 	if !is_dead:
 		if is_network_master():
-			$hud/death_canvas.visible = true
-			$hud/death_canvas/animation_player.play("die")
+			death_canvas.visible = true
+			death_canvas.animation_player.play("die")
 			kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")
@@ -585,8 +585,8 @@ func die():
 func set_health(value):
 	health = value
 	if health <= 0:
-		die()
-#		rpc("die")
+#		die()
+		rpc("die")
 
 
 func get_time_left():
@@ -621,10 +621,10 @@ remotesync func respawn():
 
 
 remote func killed_you(name):
-	$hud/who_killed.text = name + " killed you!"
-	$hud/who_killed.visible = true
+	who_killed.text = name + " killed you!"
+	who_killed.visible = true
 	yield(get_tree().create_timer(4), "timeout")
-	$hud/who_killed.visible = false
+	who_killed.visible = false
 
 
 remotesync func create_impact(scn, scn_fx, result, from):

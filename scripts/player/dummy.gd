@@ -1,5 +1,6 @@
 extends KinematicBody
-class_name Player
+
+#class_name Player
 
 const CAMERA_ROTATION_SPEED = 0.001
 const CAMERA_X_ROT_MIN = -80
@@ -50,13 +51,13 @@ var crosshair_color_initial : Color
 var fov_initial
 var fov
 
-#HUD
-onready var health_bar = $hud/health
-onready var kill_counter = $hud/kill_count
-onready var who_killed = $hud/who_killed
-onready var death_canvas = $hud/death_canvas
-var kill_count = 0
-onready var game_timer_label = $hud/game_timer_label
+##HUD
+#onready var health_bar = $hud/health
+#onready var kill_counter = $hud/kill_count
+#onready var who_killed = $hud/who_killed
+#onready var death_canvas = $hud/death_canvas
+#var kill_count = 0
+#onready var game_timer_label = $hud/game_timer_label
 
 # Force
 const GRAB_DISTANCE = 50
@@ -106,8 +107,8 @@ func _ready():
 	target = get_node("camera_base/rotation/target")
 	crosshair = get_node("hud/crosshair")
 
-	resize_viewport()
-	death_canvas.visible = false
+#	resize_viewport()
+#	death_canvas.visible = false
 
 	camera_target_initial = target.transform.origin
 	crosshair_color_initial = crosshair.modulate
@@ -172,9 +173,9 @@ func _init():
 func _physics_process(delta):
 	if not is_dead and Input.is_action_just_pressed("damage"): #Debug only
 		rpc("hurt", 10)
-	game_timer_label.text = get_time_left()
-	health_bar.value = health
-	kill_counter.text = str(kill_count)
+#	game_timer_label.text = get_time_left()
+#	health_bar.value = health
+#	kill_counter.text = str(kill_count)
 	if is_network_master():
 		if not is_dead:
 			process_input(delta)
@@ -197,8 +198,8 @@ func _input(event):
 		get_node("camera_base/rotation").rotation.x = camera_x_rot
 
 
-func resize_viewport():
-	death_canvas.rect_size = get_viewport().size
+#func resize_viewport():
+#	death_canvas.rect_size = get_viewport().size
 
 
 func process_input(delta):
@@ -553,10 +554,10 @@ remotesync func hurt(damage):
 
 remotesync func die():
 	if !is_dead:
-		if is_network_master():
-			death_canvas.visible = true
-			$hud/death_canvas/animation_player.play("die")
-			kill_count -= 1
+#		if is_network_master():
+#			death_canvas.visible = true
+#			$hud/death_canvas/animation_player.play("die")
+#			kill_count -= 1
 		if is_in_vehicle:
 			rpc("enter_vehicle")
 		hit_player.stream = body_splat
@@ -607,7 +608,7 @@ func _on_timer_respawn_timeout():
 
 
 remotesync func respawn():
-	death_canvas.visible = false
+#	death_canvas.visible = false
 	get_node("shape").disabled = false
 	falling_to_death = false
 	is_dead = false
@@ -620,11 +621,11 @@ remotesync func respawn():
 			i.queue_free()
 
 
-remote func killed_you(name):
-	who_killed.text = name + " killed you!"
-	who_killed.visible = true
-	yield(get_tree().create_timer(4), "timeout")
-	who_killed.visible = false
+#remote func killed_you(name):
+#	who_killed.text = name + " killed you!"
+#	who_killed.visible = true
+#	yield(get_tree().create_timer(4), "timeout")
+#	who_killed.visible = false
 
 
 remotesync func create_impact(scn, scn_fx, result, from):

@@ -159,6 +159,8 @@ func _ready():
 	if is_network_master():
 		camera.current = true
 		crosshair.visible = true
+	else:
+		$hud.visible = false
 
 	get_tree().get_root().connect("size_changed", self, "resize_viewport")
 
@@ -170,7 +172,7 @@ func _init():
 
 
 func _physics_process(delta):
-	if not is_dead and Input.is_action_just_pressed("damage"): #Debug only
+	if not is_dead and Input.is_action_just_pressed("damage") and is_network_master(): #Debug only
 		rpc("hurt", 10)
 	game_timer_label.text = get_time_left()
 	health_bar.value = health
@@ -607,7 +609,8 @@ func _on_timer_respawn_timeout():
 
 
 remotesync func respawn():
-	death_canvas.visible = false
+	if is_network_master():
+		death_canvas.visible = false
 	get_node("shape").disabled = false
 	falling_to_death = false
 	is_dead = false

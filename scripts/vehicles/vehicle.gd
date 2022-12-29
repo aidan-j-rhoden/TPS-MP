@@ -145,9 +145,7 @@ func _ready():
 	brakes_player = get_node("audio/breaks")
 	air_player = get_node("audio/air")
 	air_player.stream = air_sound
-	if not is_network_master():
-		hud.visible = false
-	
+
 	# Skids
 	skid_scn = preload("res://scenes/misc/skid.tscn")
 
@@ -161,7 +159,7 @@ func _physics_process(delta):
 	if driver:
 		if is_network_master():
 			process_input(delta)
-		hud.visible = true
+			hud.visible = true
 	else:
 		throttle_val = 0.0
 		brake_val = 0.2
@@ -169,7 +167,7 @@ func _physics_process(delta):
 
 	if is_network_master():
 		rpc("process_other_stuff", delta)
-	
+
 	if turbo_timer.time_left <= 7.8:
 		turbo_active = false
 

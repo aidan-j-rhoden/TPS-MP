@@ -236,9 +236,11 @@ window_title = "Controls"
 dialog_text = "W/A/S/D: Movement
     Shift: Sprint
     Space: Jump
+	J: Dance
 
 F: Enter vehicle
     W/A/S/D: Drive
+	    T/Shift: Turbo
         Space: Brakes
         C: Toggle radio
         N: Next song
@@ -247,8 +249,7 @@ F: Enter vehicle
 G: Drop weaopn
 R: Reload weapon
 Right click: Hold/Toggle aim
-Left click: Fire
-J: Dance"
+Left click: Fire"
 
 [connection signal="pressed" from="connect/v_box_container/h_box_container2/host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="connect/v_box_container/h_box_container4/join" to="." method="_on_join_pressed"]

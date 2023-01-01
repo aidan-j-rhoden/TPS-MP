@@ -86,19 +86,12 @@ remote func pre_start_game(spawn_points):
 	get_tree().get_root().get_node("lobby").hide()
 
 	var player_scene = load("res://scenes/player/player.tscn")
-	var dummy_scene = load("res://scenes/player/dummy.tscn")
 
 	for p_id in spawn_points:
-#		print(spawn_points)
 		var spawn_pos = main.get_node("spawn_points/" + str(spawn_points[p_id])).global_transform.origin
 		var player
 
 		player = player_scene.instance()
-#		print(str(spawn_points[get_tree().get_network_unique_id()]), p_id)
-#		if spawn_points[get_tree().get_network_unique_id()] == spawn_points[p_id]:
-#			player = player_scene.instance()
-#		else:
-#			player = dummy_scene.instance()
 
 		player.set_name(str(p_id)) # Use unique ID as node name
 		player.set_network_master(p_id) #set unique id as master

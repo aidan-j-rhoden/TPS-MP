@@ -153,6 +153,7 @@ size = 32
 font_data = ExtResource( 4 )
 
 [node name="truck" type="VehicleBody"]
+gravity_scale = 3.0
 continuous_cd = true
 contacts_reported = 3
 contact_monitor = true
@@ -274,7 +275,7 @@ wheel_radius = 0.65
 wheel_rest_length = 0.25
 wheel_friction_slip = 8.0
 suspension_travel = 0.5
-suspension_stiffness = 50.0
+suspension_stiffness = 80.0
 
 [node name="mesh" type="MeshInstance" parent="FR"]
 mesh = SubResource( 26 )
@@ -300,7 +301,7 @@ wheel_radius = 0.65
 wheel_rest_length = 0.25
 wheel_friction_slip = 8.0
 suspension_travel = 0.5
-suspension_stiffness = 50.0
+suspension_stiffness = 80.0
 
 [node name="mesh" type="MeshInstance" parent="FL"]
 mesh = SubResource( 27 )

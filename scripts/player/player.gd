@@ -56,6 +56,7 @@ onready var kill_counter = $hud/kill_count
 onready var who_killed = $hud/who_killed
 onready var death_canvas = $hud/death_canvas
 var kill_count = 0
+var old_kill_count = 0
 onready var game_timer_label = $hud/game_timer_label
 
 # Force
@@ -81,6 +82,8 @@ var hit_player
 var body_splat
 var voice_player
 var pain_sound
+var win_sound
+onready var the_win_sound = preload("res://sounds/info/Win_Sound.mp3")
 
 # Gibs
 var gibs_scn
@@ -140,6 +143,7 @@ func _ready():
 	body_splat = preload("res://sounds/physics/body_splat.wav")
 	voice_player = get_node("audio/voice")
 	pain_sound = preload("res://sounds/pain/pain.wav")
+	win_sound = $"audio/win"
 
 	# Gibs
 	gibs_scn = preload("res://models/characters/gibs.tscn")
@@ -173,9 +177,15 @@ func _init():
 
 func _physics_process(delta):
 	if not is_dead and Input.is_action_just_pressed("damage") and is_network_master(): #Debug only
+		kill_count += 1
 		rpc("hurt", 10)
 	game_timer_label.text = get_time_left()
 	health_bar.value = health
+#	if old_kill_count < kill_count and not win_sound.is_playing():
+#		old_kill_count = kill_count
+#		win_sound.stream = the_win_sound
+#		win_sound.stream.loop = false
+#		win_sound.play()
 	kill_counter.text = str(kill_count)
 	if is_network_master():
 		if not is_dead:

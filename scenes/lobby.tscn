@@ -221,7 +221,6 @@ size_flags_horizontal = 2
 size_flags_vertical = 2
 
 [node name="info_pop" type="AcceptDialog" parent="."]
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -250,6 +249,13 @@ G: Drop weaopn
 R: Reload weapon
 Right click: Hold/Toggle aim
 Left click: Fire"
+
+[node name="game_stats" type="AcceptDialog" parent="."]
+margin_left = 587.108
+margin_top = 324.858
+margin_right = 708.108
+margin_bottom = 382.858
+window_title = "Game Stats"
 
 [connection signal="pressed" from="connect/v_box_container/h_box_container2/host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="connect/v_box_container/h_box_container4/join" to="." method="_on_join_pressed"]

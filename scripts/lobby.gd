@@ -73,6 +73,7 @@ func _on_game_ended():
 	get_node("connect").show()
 	get_node("players").hide()
 	get_node("connect/v_box_container/h_box_container2/host").disabled = false
+	$game_stats.visible = true
 
 
 func _on_game_error(errtxt):

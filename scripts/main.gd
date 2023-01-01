@@ -13,7 +13,8 @@ func _ready():
 
 func _process(delta):
 	if timer.get_time_left() <= round_time/2:
-		cycle_light()
+		pass
+#		cycle_light() #TODO: fix this after networking
 
 
 func _on_game_timer_timeout():

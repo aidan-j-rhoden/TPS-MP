@@ -162,7 +162,7 @@ func _physics_process(delta):
 			hud.visible = true
 	else:
 		throttle_val = 0.0
-		brake_val = 0.2
+		brake_val = 0.5
 		hud.visible = false
 
 	if is_network_master():

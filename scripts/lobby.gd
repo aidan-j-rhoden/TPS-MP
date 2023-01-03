@@ -64,6 +64,8 @@ func _on_connection_failed():
 	get_node("connect/v_box_container/h_box_container2/host").disabled = false
 	get_node("connect/v_box_container/h_box_container4/join").disabled = false
 	get_node("connect/v_box_container/h_box_container5/error_label").set_text("Connection failed.")
+	get_tree().set_network_peer(null) # End networking
+	send_to_server = false
 
 
 func _on_game_ended():

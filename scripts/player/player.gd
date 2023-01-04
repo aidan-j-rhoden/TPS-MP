@@ -565,6 +565,7 @@ remotesync func hurt(damage):
 
 remotesync func die():
 	if !is_dead:
+		$shape/cube/root/skeleton.physical_bones_start_simulation()
 		if is_network_master():
 			death_canvas.visible = true
 			$hud/death_canvas/animation_player.play("die")
@@ -581,14 +582,15 @@ remotesync func die():
 		camera.fov = fov_initial
 		crosshair.modulate.a = 0.0
 
-		visible = false
+#		visible = false
 		if not falling_to_death:
+			pass
 			# Gibs
-			var gibs = gibs_scn.instance()
-			main_scn.add_child(gibs)
-			gibs.global_transform.origin = global_transform.origin
-			for c in gibs.get_children():
-				c.apply_impulse(global_transform.origin, c.global_transform.origin - global_transform.origin * 1.1)
+#			var gibs = gibs_scn.instance()
+#			main_scn.add_child(gibs)
+#			gibs.global_transform.origin = global_transform.origin
+#			for c in gibs.get_children():
+#				c.apply_impulse(global_transform.origin, c.global_transform.origin - global_transform.origin * 1.1)
 
 		is_dead = true
 		get_node("timer_respawn").start()

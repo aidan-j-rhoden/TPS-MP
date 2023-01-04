@@ -85,8 +85,8 @@ func process_stuff():
 	# Set previous velocity
 	prev_lvl = lvl
 
-#	rpc_unreliable("update_trans_rot", translation, rotation)
-#
-#puppet func update_trans_rot(trans, rot):
-#	translation = trans
-#	rotation = rot
+	rpc_unreliable("update_trans_rot", translation, rotation)
+
+puppet func update_trans_rot(trans, rot):
+	translation = trans
+	rotation = rot

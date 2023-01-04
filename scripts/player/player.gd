@@ -574,13 +574,12 @@ remotesync func die():
 		hit_player.stream = body_splat
 		hit_player.play()
 
-#		current_aim = false
-#		is_aiming = false
-#		toggled_aim = false
-#		aiming_timer = 0.0
-#		camera_target_initial = target.transform.origin
-#		fov_initial = camera.fov
-#		crosshair.modulate.a = 0.0
+		current_aim = false
+		is_aiming = false
+		toggled_aim = false
+		aiming_timer = 0.0
+		camera.fov = fov_initial
+		crosshair.modulate.a = 0.0
 
 		visible = false
 		if not falling_to_death:

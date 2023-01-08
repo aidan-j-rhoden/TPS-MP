@@ -521,9 +521,14 @@ remotesync func process_animations(is_in_vehicle, is_grounded, is_climbing, is_d
 
 	if is_aiming:
 		if weapon_equipped:
-			animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
-			animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
-			animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = camera_y_rot
+			if equipped_weapon.title == "pistol":
+				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
+				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
+				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = camera_y_rot
+			elif equipped_weapon.title == "sniper":
+				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
+				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
+				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = 0
 		else:
 			animation_tree["parameters/blend_tree/aim_blend/blend_amount"] = 1
 			animation_tree["parameters/blend_tree/aim_dir_x_blend/blend_amount"] = -camera_x_rot

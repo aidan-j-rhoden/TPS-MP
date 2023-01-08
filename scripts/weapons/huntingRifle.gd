@@ -7,6 +7,7 @@ export var bullets = 1
 export var spread = 2
 export var DAMAGE = 35
 export var fov = 40
+export var title = "sniper"
 var timer_fire = 0
 var can_fire = true
 

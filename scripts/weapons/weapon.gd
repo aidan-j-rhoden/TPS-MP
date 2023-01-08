@@ -8,6 +8,7 @@ export var bullets = 1
 export var spread = 5
 export var DAMAGE = 10
 export var fov = 60
+export var title = "pistol"
 var timer_fire = 0
 var can_fire = true
 

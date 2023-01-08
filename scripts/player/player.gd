@@ -395,7 +395,7 @@ func process_movement(delta):
 		var quat_to = Quat(Transform().looking_at(-dir, Vector3.UP).basis)
 		shape_orientation.basis = Basis(quat_from.slerp(quat_to, delta * 10))
 
-	if is_aiming and weapon_equipped:
+	if is_aiming and weapon_equipped and dir.dot(hvel) <= 0:
 		# Convert orientation to quaternions for interpolating rotation.
 		var q_from = shape_orientation.basis.get_rotation_quat()
 		var q_to = $camera_base.global_transform.basis.get_rotation_quat()

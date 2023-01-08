@@ -40,6 +40,7 @@ var is_climbing = false
 var is_dancing = false
 var is_in_vehicle = false
 var weapon_equipped = false
+var weapon_name = ""
 
 # Aiming
 var camera
@@ -276,7 +277,7 @@ func process_input(delta):
 		var camera_target = camera_target_initial
 		var crosshair_alpha = 0.0
 		fov = fov_initial
-		
+
 
 		current_aim = false
 
@@ -393,7 +394,15 @@ func process_movement(delta):
 		var quat_from = Quat(shape_orientation.basis)
 		var quat_to = Quat(Transform().looking_at(-dir, Vector3.UP).basis)
 		shape_orientation.basis = Basis(quat_from.slerp(quat_to, delta * 10))
-		shape.rotation.y = shape_orientation.basis.get_euler().y
+
+	if is_aiming and weapon_equipped:
+		# Convert orientation to quaternions for interpolating rotation.
+		var q_from = shape_orientation.basis.get_rotation_quat()
+		var q_to = $camera_base.global_transform.basis.get_rotation_quat()
+		# Interpolate current rotation with desired one.
+		shape_orientation.basis = Basis(q_from.slerp(q_to, delta * 10))
+
+	shape.rotation.y = shape_orientation.basis.get_euler().y
 
 	# Ledge detection
 	if ray_ledge_front.is_colliding():
@@ -432,6 +441,7 @@ remotesync func check_weapons():
 	var weapons = get_node("shape/cube/root/skeleton/bone_attachment/weapon").get_children()
 	if weapons.size() > 0:
 		equipped_weapon = weapons[0]
+		weapon_name = equipped_weapon.title
 	else:
 		equipped_weapon = null
 
@@ -521,14 +531,14 @@ remotesync func process_animations(is_in_vehicle, is_grounded, is_climbing, is_d
 
 	if is_aiming:
 		if weapon_equipped:
-			if equipped_weapon.title == "pistol":
+			if weapon_name == "pistol":
 				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
 				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
 				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = camera_y_rot
-			elif equipped_weapon.title == "sniper":
+			elif weapon_name == "sniper":
 				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
 				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
-				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = 0
+				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = 0.5
 		else:
 			animation_tree["parameters/blend_tree/aim_blend/blend_amount"] = 1
 			animation_tree["parameters/blend_tree/aim_dir_x_blend/blend_amount"] = -camera_x_rot

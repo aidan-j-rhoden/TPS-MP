@@ -266,7 +266,7 @@ func process_input(delta):
 		# Dealing with weapons
 		if equipped_weapon != null:
 			if weapon_equipped:
-				if Input.is_action_just_pressed("lmb") and is_aiming:
+				if (Input.is_action_just_pressed("lmb") or Input.is_action_pressed("auto_fire"))  and is_aiming:
 					equipped_weapon.rpc("fire")
 				if Input.is_action_just_pressed("reload"):
 					equipped_weapon.rpc("reload")

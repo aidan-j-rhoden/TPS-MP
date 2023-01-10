@@ -239,7 +239,7 @@ dialog_text = "W/A/S/D: Movement
 
 F: Enter vehicle
     W/A/S/D: Drive
-	    T/Shift: Turbo
+	    Shift: Turbo
         Space: Brakes
         C: Toggle radio
         N: Next song
@@ -248,7 +248,8 @@ F: Enter vehicle
 G: Drop weaopn
 R: Reload weapon
 Right click: Hold/Toggle aim
-Left click: Fire"
+Left click: Fire
+T/Middle mouse: Automatic fire"
 
 [node name="game_stats" type="AcceptDialog" parent="."]
 margin_left = 587.108

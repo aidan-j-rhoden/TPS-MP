@@ -248,7 +248,7 @@ remotesync func drop():
 	var current_ammo_supply = ammo_supply
 	get_parent().remove_child(self)
 	main_scn.add_child(self)
-	self.global_transform.origin = shooter.global_transform.origin + shooter.shape_orientation.basis.z * 3.0
+	self.global_transform.origin = shooter.global_transform.origin + shooter.shape_orientation.basis.z * 1.5 + shooter.shape_orientation.basis.x * 2.5
 	set_ammo(current_ammo)
 	set_ammo_supply(current_ammo_supply)
 	if shooter.is_network_master():

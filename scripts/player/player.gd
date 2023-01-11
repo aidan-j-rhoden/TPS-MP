@@ -239,7 +239,8 @@ func process_input(delta):
 
 		# Sprinting
 		if Input.is_action_pressed("sprint"):
-			is_sprinting = true
+			if (weapon_equipped and weapon_name != "heavy") or not weapon_equipped:
+				is_sprinting = true
 		else:
 			is_sprinting = false
 
@@ -442,6 +443,8 @@ remotesync func check_weapons():
 	if weapons.size() > 0:
 		equipped_weapon = weapons[0]
 		weapon_name = equipped_weapon.title
+		if weapon_name == "heavy":
+			is_sprinting = false
 	else:
 		equipped_weapon = null
 
@@ -536,6 +539,10 @@ remotesync func process_animations(is_in_vehicle, is_grounded, is_climbing, is_d
 				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
 				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = camera_y_rot
 			elif weapon_name == "sniper":
+				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
+				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
+				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = 0.5
+			elif weapon_name == "heavy":
 				animation_tree["parameters/blend_tree/pistol_aim_blend/blend_amount"] = 1
 				animation_tree["parameters/blend_tree/pistol_aim_dir_x_blend/blend_amount"] = -camera_x_rot
 				animation_tree["parameters/blend_tree/pistol_aim_dir_y_blend/blend_amount"] = 0.5

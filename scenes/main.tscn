@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://models/maps/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/props/barrel.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/vehicles/auto_truck.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/main.gd" type="Script" id=7]
 [ext_resource path="res://scenes/weapons/huntingRifle.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/weapons/m-134.tscn" type="PackedScene" id=9]
 
 [node name="main" type="Spatial"]
 script = ExtResource( 7 )
@@ -221,5 +222,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.3472, -0.0579181, 6.06323 )
 [node name="game_timer" type="Timer" parent="."]
 wait_time = 300.0
 one_shot = true
+
+[node name="minigun_m-134" parent="." instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.62693, 1.00715, 7.93826 )
 
 [connection signal="timeout" from="game_timer" to="." method="_on_game_timer_timeout"]

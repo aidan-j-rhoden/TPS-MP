@@ -1,0 +1,90 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://models/weapons/minigun_m-134.glb" type="PackedScene" id=1]
+[ext_resource path="res://textures/fx/muzzle_flash.png" type="Texture" id=2]
+[ext_resource path="res://sounds/weapons/glock/reload.wav" type="AudioStream" id=3]
+[ext_resource path="res://sounds/weapons/ammo.wav" type="AudioStream" id=4]
+[ext_resource path="res://sounds/weapons/glock/fire.wav" type="AudioStream" id=5]
+[ext_resource path="res://fonts/Roboto-Medium.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://scripts/weapons/m-134.gd" type="Script" id=7]
+
+[sub_resource type="Animation" id=10]
+resource_name = "idle"
+
+[sub_resource type="Animation" id=11]
+resource_name = "reload"
+
+[sub_resource type="SpatialMaterial" id=6]
+flags_transparent = true
+flags_unshaded = true
+params_cull_mode = 2
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="QuadMesh" id=7]
+material = SubResource( 6 )
+size = Vector2( 0.64, 0.64 )
+
+[sub_resource type="SphereShape" id=8]
+radius = 0.636723
+
+[sub_resource type="DynamicFont" id=9]
+size = 32
+font_data = ExtResource( 6 )
+
+[node name="minigun_m-134" instance=ExtResource( 1 )]
+script = ExtResource( 7 )
+
+[node name="Sketchfab_model" parent="." index="0"]
+transform = Transform( 1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0 )
+
+[node name="animation_player" parent="." index="1"]
+anims/idle = SubResource( 10 )
+anims/reload = SubResource( 11 )
+
+[node name="flash" type="MeshInstance" parent="." index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.223307, 1.28458 )
+visible = false
+mesh = SubResource( 7 )
+
+[node name="light" type="OmniLight" parent="flash" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.09 )
+light_color = Color( 1, 0.92549, 0.74902, 1 )
+light_energy = 2.0
+omni_range = 3.98396
+
+[node name="area" type="Area" parent="." index="3"]
+
+[node name="collision_shape" type="CollisionShape" parent="area" index="0"]
+shape = SubResource( 8 )
+
+[node name="audio" type="Spatial" parent="." index="4"]
+
+[node name="fire" type="AudioStreamPlayer3D" parent="audio" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.146, 0.823 )
+stream = ExtResource( 5 )
+unit_db = 10.0
+
+[node name="reload" type="AudioStreamPlayer3D" parent="audio" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.170056, 0.0976479, 0.0567202 )
+stream = ExtResource( 3 )
+
+[node name="ammo" type="AudioStreamPlayer3D" parent="audio" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.136272, 0.115729, 0.0754496 )
+stream = ExtResource( 4 )
+
+[node name="hud" type="CanvasLayer" parent="." index="5"]
+
+[node name="ammo" type="Label" parent="hud" index="0"]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -240.0
+margin_top = -60.0
+custom_colors/font_color = Color( 1, 0.647059, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "AMMO: 16/16"
+__meta__ = {
+"_edit_use_anchors_": false
+}

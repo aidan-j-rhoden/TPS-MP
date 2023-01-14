@@ -82,6 +82,7 @@ puppetsync func pre_start_game(spawn_points):
 	get_tree().set_pause(true)
 	# Change scene
 	main = load("res://scenes/main.tscn").instance()
+	main.set_network_master(get_tree().get_network_unique_id())
 	get_tree().get_root().add_child(main)
 
 	get_tree().get_root().get_node("lobby").hide()

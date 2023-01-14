@@ -32,16 +32,14 @@ func _player_connected(_id): # Callback from SceneTree
 
 
 func _player_disconnected(id): # Callback from SceneTree
-	if get_tree().is_network_server():
-		if has_node("/root/world"): # Game is in progress
-			emit_signal("game_error", "Player " + players[id] + " disconnected")
-			end_game()
-		else: # Game is not in progress
-			# If we are the server, send to the new dude all the already registered players
-			unregister_player(id)
-			for p_id in players:
-				# Erase in the server
-				rpc_id(p_id, "unregister_player", id)
+	if has_node("/root/main"): # Game is in progress
+		emit_signal("game_error", "Player " + players[id] + " disconnected")
+		end_game()
+	else: # Game is not in progress
+		# Remove player here
+		unregister_player(id)
+		for p_id in players: # Tell all the other players in the lobby who left
+			rpc_id(p_id, "unregister_player", id) # REmove player there
 
 
 func _connected_ok(): # Callback from SceneTree, only for clients (not server)
@@ -75,6 +73,8 @@ remote func register_player(id, new_player_name):
 
 remote func unregister_player(id):
 	players.erase(id)
+	if has_node("/root/main"):
+		get_node("main/players/" + str(id)).queue_free()
 	emit_signal("player_list_changed")
 
 
@@ -167,10 +167,9 @@ func begin_game():
 
 
 func end_game():
-	if has_node("/root/world"): # Game is in progress
+	if has_node("/root/main"): # Game is in progress
 		# End it
-		get_node("/root/world").queue_free()
-		get_tree().get_root().get_node(main).queue_free()
+		get_node("/root/main").queue_free()
 
 	emit_signal("game_ended")
 	players.clear()

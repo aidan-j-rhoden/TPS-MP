@@ -166,10 +166,7 @@ func _physics_process(delta):
 		hud.visible = false
 
 	if is_network_master():
-		print("I AM MASTER")
 		rpc("process_other_stuff", delta)
-	else:
-		print("aint no master")
 
 	if turbo_timer.time_left <= 7.8:
 		turbo_active = false

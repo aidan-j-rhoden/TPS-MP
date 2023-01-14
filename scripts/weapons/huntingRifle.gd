@@ -204,10 +204,15 @@ func _on_state_changed(value):
 			get_node("area").monitoring = false
 			get_node("area/collision_shape").disabled = true
 		DROPPED:
+			rpc_unreliable("update_trans", translation)
 			get_node("animation_player").seek(0, true)
 			get_node("animation_player").stop()
 			get_node("area").monitoring = true
 			get_node("area/collision_shape").disabled = false
+
+
+remote func update_trans(trans):
+	translation = trans
 
 
 # Pick up weapon

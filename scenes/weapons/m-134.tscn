@@ -88,3 +88,8 @@ text = "AMMO: 16/16"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ray_up" type="RayCast" parent="." index="6"]
+enabled = true
+cast_to = Vector3( 0, 200, 0 )
+collide_with_areas = true

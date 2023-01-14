@@ -47,6 +47,8 @@ onready var main_scn = get_tree().root.get_child(get_tree().root.get_child_count
 
 
 func _ready():
+	if get_tree().is_network_server():
+		spawn_position()
 	set_ammo(MAX_AMMO)
 	set_ammo_supply(MAX_AMMO)
 
@@ -267,3 +269,14 @@ remotesync func drop():
 func random_spread(spread_value):
 	randomize()
 	return Vector3(rand_range(-spread_value, spread_value), rand_range(-spread_value, spread_value), rand_range(-spread_value, spread_value))
+
+
+func spawn_position():
+	randomize()
+#	self.global_transform.origin = (Vector3(rand_range(-399, 399), 0.8, rand_range(-399, 399)))
+	print(self.global_transform)
+	var raycast = $ray_up
+	if raycast.is_colliding():
+		var collision = raycast.get_collider()
+		print(collision)
+	

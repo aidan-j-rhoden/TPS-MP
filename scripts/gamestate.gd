@@ -78,7 +78,7 @@ remote func unregister_player(id):
 	emit_signal("player_list_changed")
 
 
-puppetsync func pre_start_game(spawn_points):
+remote func pre_start_game(spawn_points):
 	get_tree().set_pause(true)
 	# Change scene
 	main = load("res://scenes/main.tscn").instance()

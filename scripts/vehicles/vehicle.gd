@@ -312,7 +312,7 @@ master func process_other_stuff(delta):
 	rpc_unreliable("update_trans_rot", translation, rotation, get_node("body").rotation, driver, engine_force, steer_angle, engine_RPM)
 
 
-puppet func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):
+remote func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):
 	translation = trans
 	rotation = rot
 	get_node("body").rotation = body_rot

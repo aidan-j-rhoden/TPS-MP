@@ -161,7 +161,6 @@ func set_shine(value):
 
 func _on_blade_2_body_entered(body):
 	print(body)
-	body = body.get_direct_parent()
 	if body is Player and not body.is_in_vehicle and body != shooter:
 		shooter.get_node("audio/hit").play()
 #		result.collider.rpc("hit", DAMAGE, (result.position - global_transform.origin).normalized() * knockback_multiplier) #Should this line even be here?

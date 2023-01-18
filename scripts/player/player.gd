@@ -256,7 +256,7 @@ func process_input(delta):
 
 		# Enter vehicle
 		if Input.is_action_just_pressed("enter_vehicle"):
-			rpc("enter_vehicle")
+			rpc_id(1, "enter_vehicle")
 
 		# Change weapon
 		if Input.is_action_just_released("next_weapon"):
@@ -569,7 +569,7 @@ remotesync func update_is_climbing(value):
 
 
 # Sync position and rotation in the network
-puppet func update_trans_rot(pos, rot, shape_rot):
+remote func update_trans_rot(pos, rot, shape_rot):
 	translation = pos
 	rotation = rot
 	shape.rotation = shape_rot

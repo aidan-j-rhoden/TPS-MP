@@ -569,7 +569,7 @@ remotesync func update_is_climbing(value):
 
 
 # Sync position and rotation in the network
-puppet func update_trans_rot(pos, rot, shape_rot):
+remote func update_trans_rot(pos, rot, shape_rot):
 	translation = pos
 	rotation = rot
 	shape.rotation = shape_rot

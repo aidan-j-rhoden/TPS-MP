@@ -86,8 +86,8 @@ func process_stuff():
 	prev_lvl = lvl
 
 #	rpc_unreliable("update_trans_rot", translation, rotation)
-#
-#
-#puppet func update_trans_rot(trans, rot):
-#	translation = trans
-#	rotation = rot
+
+
+remote func update_trans_rot(trans, rot):
+	translation = trans
+	rotation = rot

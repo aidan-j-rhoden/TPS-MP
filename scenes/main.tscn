@@ -228,6 +228,6 @@ one_shot = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.62693, 1.00715, 7.93826 )
 
 [node name="sting" parent="." instance=ExtResource( 10 )]
-transform = Transform( 0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.3502, 1.13635, 4.55751 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.3502, 1.13635, 4.55751 )
 
 [connection signal="timeout" from="game_timer" to="." method="_on_game_timer_timeout"]

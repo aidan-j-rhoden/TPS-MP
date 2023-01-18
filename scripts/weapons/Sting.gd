@@ -2,9 +2,10 @@ extends Spatial
 
 onready var animation_tree = $animation_tree
 var shine = "parameters/shine/add_amount"
+onready var blade_cast = $mesh_instance/blade_cast
 
 onready var main_scn = get_tree().root.get_child(get_tree().root.get_child_count() - 1)
-var shooter
+var shooter# = null
 
 onready var sword_copy = load("res://scenes/weapons/Sting.tscn")
 
@@ -38,9 +39,12 @@ onready var scn_blood_fx = preload("res://scenes/impact/blood_fx.tscn")
 func _ready():
 	connect("state_changed", self, "_on_state_changed")
 	get_node("area").connect("body_entered", self, "_on_body_entered")
+	blade_cast.add_exception($mesh_instance/blade)
+	blade_cast.add_exception($area)
 
 
 func _physics_process(delta):
+	check_collision(delta)
 	if timer_fire < fire_delay:
 		timer_fire += 1.0 * delta
 	if timer_fire > fire_delay:
@@ -61,11 +65,28 @@ func _physics_process(delta):
 		drop_timeout_start = false
 		drop_timeout = 0
 
+	if shooter != null:
+		var nearest = get_nearest_player()
+		if 0 < nearest and nearest <= 100:
+			nearest = 101 - nearest
+			set_shine(nearest/100)
+		else:
+			set_shine(0)
+
+
+func get_nearest_player():
+	var distance = 0
+	for player in gamestate.players: #get_node("/root/main/players").get_children():
+		if distance < self.translation.distance_to(get_node("/root/main/players/" + str(player)).translation):
+			distance = self.translation.distance_to(get_node("/root/main/players/" + str(player)).translation)
+	return distance
 
 # Fire
 remotesync func fire():
 	if can_fire:
 		timer_fire = 0
+	$animation_player.play("swing")
+	shooter.get_node("shape/cube/animation_player").play()
 
 
 remotesync func create_impact(scn, scn_fx, result, from):
@@ -99,7 +120,6 @@ func _on_state_changed(value):
 		PICKED:
 			get_node("area").monitoring = false
 			get_node("area/collision_shape").disabled = true
-			animation_tree[shine] = 1
 		DROPPED:
 			rpc_unreliable("update_trans", translation)
 			get_node("area").monitoring = true
@@ -127,11 +147,12 @@ remotesync func pick():
 				var weapon_copy = sword_copy.instance()
 				weapon_container.add_child(weapon_copy)
 				weapon_copy.transform = Transform.IDENTITY
+				weapon_copy.translation = Vector3(0, 0.5, 0)
 				weapon_copy.shooter = shooter
 				weapon_copy.set_state(PICKED)
 				weapon_copy.get_node("mesh_instance/blade").add_collision_exception_with(shooter)
 				weapon_copy.set_rotation(Vector3(89.5, 0, 0))
-				weapon_copy.set_scale(Vector3(0.04, 0.04, 0.04))
+				weapon_copy.set_scale(Vector3(1.666, 1.666, 1.666))
 				shooter.weapon_equipped = true
 #				weapon_copy.get_node("audio/ammo").play() # TODO add sword pick sound here
 				queue_free()
@@ -143,6 +164,7 @@ remotesync func drop():
 	main_scn.add_child(self)
 	self.global_transform.origin = shooter.global_transform.origin + shooter.shape_orientation.basis.z * 1.5 + shooter.shape_orientation.basis.x * 1.8
 	set_rotation(Vector3(0, 0, 0))
+	set_scale(Vector3(1, 1, 1))
 	shooter.equipped_weapon = null
 	shooter.weapon_equipped = false
 	shooter = null
@@ -159,15 +181,16 @@ func set_shine(value):
 	animation_tree[shine] = value
 
 
-func _on_blade_2_body_entered(body):
+func check_collision(delta):
+	var body = blade_cast.get_collider()
+	var space_state = get_world().direct_space_state
+	body = space_state.intersect_ray(blade_cast.translation, blade_cast.get_collision_point(), [self, shooter, $mesh_instance/blade])
 	print(body)
-	if body is Player and not body.is_in_vehicle and body != shooter:
-		shooter.get_node("audio/hit").play()
-#		result.collider.rpc("hit", DAMAGE, (result.position - global_transform.origin).normalized() * knockback_multiplier) #Should this line even be here?
-		if body.health <= DAMAGE and not body.is_dead:
+	if body is KinematicBody and not body.is_in_vehicle and body != shooter:
+		if body.health <= DAMAGE * delta and not body.is_dead:
 			shooter.kill_count += 2
 			body.rpc("killed_you", gamestate.get_player_name())
-		body.rpc("hurt", DAMAGE)
+		body.rpc("hurt", DAMAGE * delta)
 #		var position = result.position - result.collider.global_transform.origin
 #		var impulse = (result.position - global_transform.origin).normalized()
 #		result.collider.apply_impulse(position, impulse * knockback_multiplier)
@@ -176,12 +199,12 @@ func _on_blade_2_body_entered(body):
 	if body is KinematicBody and body.get_parent() is VehicleBody:
 		body.rpc("create_impact", scn_wound, scn_blood_fx, body, shooter.camera.global_transform.basis.z)
 		rpc("create_impact", scn_wound, scn_blood_fx, body, shooter.camera.global_transform.basis.z)
-		if body.health <= DAMAGE and not body.is_dead:
+		if body.health <= DAMAGE * delta and not body.is_dead:
 			shooter.kill_count += 2
 			body.rpc("killed_you", gamestate.get_player_name())
-		body.rpc("hurt", DAMAGE)
+		body.rpc("hurt", DAMAGE * delta)
 	if body is Gibs:
-		var position = body.position - body.collider.global_transform.origin
-		var impulse = (body.position - global_transform.origin).normalized()
-		body.apply_impulse(position, impulse * 8)
+#		var position = body.position - body.collider.global_transform.origin
+#		var impulse = (body.position - global_transform.origin).normalized()
+#		body.apply_impulse(position, impulse * 8)
 		rpc("create_impact", scn_wound, scn_blood_fx, body, shooter.camera.global_transform.basis.z)

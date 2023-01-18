@@ -185,7 +185,7 @@ func process_input(delta):
 
 	if (throttle_val_target < 0.0):
 		throttle_val_target = 0.0
-	
+
 	if (brake_val < 0.0):
 		brake_val = 0.0
 
@@ -277,7 +277,7 @@ master func process_other_stuff(delta):
 			if !w.skid.playing:
 				w.skid.stream = skid_sound
 				w.skid.play()
-		
+
 		var skid_unit_size = 0.0
 		var skid_unit_size_target = (1 - w.node.get_skidinfo()) * 5
 		skid_unit_size += (skid_unit_size_target - skid_unit_size) * 0.25
@@ -287,7 +287,7 @@ master func process_other_stuff(delta):
 			var skid = skid_scn.instance()
 			main_scn.add_child(skid)
 			skid.global_transform.origin = w.node.global_transform.origin + Vector3(0, -w.node.wheel_radius + 0.15, 0)
-		
+
 		w.rpm = (lvl / (w.node.wheel_radius * TAU)) * 300
 
 	# Engine
@@ -312,7 +312,7 @@ master func process_other_stuff(delta):
 	rpc_unreliable("update_trans_rot", translation, rotation, get_node("body").rotation, driver, engine_force, steer_angle, engine_RPM)
 
 
-remote func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):
+puppet func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):
 	translation = trans
 	rotation = rot
 	get_node("body").rotation = body_rot

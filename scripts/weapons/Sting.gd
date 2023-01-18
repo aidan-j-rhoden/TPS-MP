@@ -65,13 +65,13 @@ func _physics_process(delta):
 		drop_timeout_start = false
 		drop_timeout = 0
 
-	if shooter != null:
-		var nearest = get_nearest_player()
-		if 0 < nearest and nearest <= 100:
-			nearest = 101 - nearest
-			set_shine(nearest/100)
-		else:
-			set_shine(0)
+#	if shooter != null:
+#		var nearest = get_nearest_player()
+#		if 0 < nearest and nearest <= 100:
+#			nearest = 101 - nearest
+#			set_shine(nearest/100)
+#		else:
+#			set_shine(0)
 
 
 func get_nearest_player():
@@ -161,7 +161,7 @@ remotesync func pick():
 # Drop weapon
 remotesync func drop():
 	get_parent().remove_child(self)
-	main_scn.add_child(self)
+	main_scn.get_node("weapons").add_child(self)
 	self.global_transform.origin = shooter.global_transform.origin + shooter.shape_orientation.basis.z * 1.5 + shooter.shape_orientation.basis.x * 1.8
 	set_rotation(Vector3(0, 0, 0))
 	set_scale(Vector3(1, 1, 1))
@@ -185,7 +185,7 @@ func check_collision(delta):
 	var body = blade_cast.get_collider()
 	var space_state = get_world().direct_space_state
 	body = space_state.intersect_ray(blade_cast.translation, blade_cast.get_collision_point(), [self, shooter, $mesh_instance/blade])
-	print(body)
+#	print(body)
 	if body is KinematicBody and not body.is_in_vehicle and body != shooter:
 		if body.health <= DAMAGE * delta and not body.is_dead:
 			shooter.kill_count += 2

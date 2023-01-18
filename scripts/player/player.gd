@@ -432,7 +432,7 @@ func process_movement(delta):
 	prev_vel = vel
 
 	# Network
-	rpc_unreliable("update_trans_rot", translation, rotation, shape.rotation)
+	rpc_unreliable_id(1, "update_trans_rot", translation, rotation, shape.rotation)
 
 
 # Check for weapons
@@ -594,7 +594,7 @@ remotesync func die():
 			$hud/death_canvas/animation_player.play("die")
 			kill_count -= 1
 		if is_in_vehicle:
-			rpc("enter_vehicle")
+			rpc_id(1, "enter_vehicle")
 		hit_player.stream = body_splat
 		hit_player.play()
 

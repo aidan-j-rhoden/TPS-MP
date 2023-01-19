@@ -453,3 +453,9 @@ collision_mask = 3
 [node name="animation_player" type="AnimationPlayer" parent="."]
 anims/Error01 = SubResource( 30 )
 anims/Idle = SubResource( 32 )
+
+[node name="self_destruct" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[connection signal="timeout" from="self_destruct" to="." method="_on_self_destruct_timeout"]

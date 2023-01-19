@@ -15,3 +15,9 @@ script = ExtResource( 1 )
 transform = Transform( 1, 0, 0, 0, 2.98023e-08, 1, 0, -1, 2.98023e-08, 0, 0, 0 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
+
+[node name="self_destruct" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[connection signal="timeout" from="self_destruct" to="." method="_on_self_destruct_timeout"]

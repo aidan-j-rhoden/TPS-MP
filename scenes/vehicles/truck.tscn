@@ -406,6 +406,10 @@ wait_time = 8.0
 one_shot = true
 autostart = true
 
+[node name="self_destruct" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
 [node name="hud" type="CanvasLayer" parent="."]
 visible = false
 
@@ -419,3 +423,5 @@ margin_top = -60.0
 custom_colors/font_color = Color( 1, 0.647059, 0, 1 )
 custom_fonts/font = SubResource( 30 )
 text = "Turbo: 00.00"
+
+[connection signal="timeout" from="self_destruct" to="." method="_on_self_destruct_timeout"]

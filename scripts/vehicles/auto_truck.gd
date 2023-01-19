@@ -160,6 +160,10 @@ func _physics_process(delta):
 	if is_network_master():
 		rpc("process_other_stuff", delta)
 
+	if global_transform.origin.y < -12:
+		$self_destruct.start()
+
+
 func _process(_delta):
 	if throttle_val_target != 0.0 and brake_val != 0.0:
 		animation_player.play("Error01")
@@ -410,3 +414,7 @@ func shift_gears():
 
 func get_speed_kph():
 	return current_speed_mps * 3600.0 / 1000.0
+
+
+func _on_self_destruct_timeout():
+	queue_free()

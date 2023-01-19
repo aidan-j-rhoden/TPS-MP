@@ -172,8 +172,7 @@ func _physics_process(delta):
 		turbo_active = false
 
 	if global_transform.origin.y < -12:
-		yield(get_tree().create_timer(10), "timeout")
-		self.queue_free()
+		$self_destruct.start()
 
 
 func process_input(delta):
@@ -391,3 +390,7 @@ func shift_gears():
 
 func get_speed_kph():
 	return current_speed_mps * 3600.0 / 1000.0
+
+
+func _on_self_destruct_timeout():
+	queue_free()

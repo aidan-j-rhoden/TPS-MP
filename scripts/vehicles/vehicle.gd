@@ -173,11 +173,10 @@ func _physics_process(delta):
 		turbo_active = false
 
 	if global_transform.origin.y < -12:
-		yield(get_tree().create_timer(10), "timeout")
-		queue_free()
+		$self_destruct.start()
 
 
-func process_input(delta):
+func process_input(_delta):
 	steer_val = steering_mult * Input.get_joy_axis(0, joy_steering)
 	#throttle_val = throttle_mult * Input.get_joy_axis(0, joy_throttle)
 	brake_val = brake_mult * Input.get_joy_axis(0, joy_brake)
@@ -392,3 +391,7 @@ func shift_gears():
 
 func get_speed_kph():
 	return current_speed_mps * 3600.0 / 1000.0
+
+
+func _on_self_destruct_timeout():
+	queue_free()

@@ -70,7 +70,6 @@ func _on_connection_failed():
 
 func _on_game_ended():
 	show()
-	$"../main".queue_free()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	get_node("connect").show()
 	get_node("players").hide()

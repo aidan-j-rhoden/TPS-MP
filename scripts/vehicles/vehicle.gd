@@ -157,7 +157,8 @@ func _physics_process(delta):
 	else:
 		turbo_text.add_color_override("font_color", Color(255, 165, 0, 255))
 	if driver:
-		if is_network_master():
+		print(gamestate.players)
+		if driver.name == gamestate.player_name:#is_network_master():
 			process_input(delta)
 			hud.visible = true
 	else:

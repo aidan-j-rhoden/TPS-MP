@@ -25,7 +25,9 @@ signal game_ended()
 signal game_error(what)
 
 
-func _player_connected(_id): # Callback from SceneTree
+func _player_connected(_id): # Callback from SceneTree  Ideally, this will not be used when this is complete,
+	# however, for testing purposes, I will leave it here for now.
+
 	# This is not used in this demo, because _connected_ok is called for clients
 	# on success and will do the job.
 	pass
@@ -44,8 +46,9 @@ func _player_disconnected(id): # Callback from SceneTree
 
 func _connected_ok(): # Callback from SceneTree, only for clients (not server)
 	# Registration of a client beings here, tell everyone that we are here
-	rpc("register_player", get_tree().get_network_unique_id(), player_name)
+#	rpc("register_player", get_tree().get_network_unique_id(), player_name)
 	emit_signal("connection_succeeded")
+	rpc_id(1, "player_set", player_name)
 
 
 func _server_disconnected(): # Callback from SceneTree, only for clients (not server)
@@ -60,12 +63,12 @@ func _connected_fail(): # Callback from SceneTree, only for clients (not server)
 
 # Lobby management functions
 remote func register_player(id, new_player_name):
-	if get_tree().is_network_server():
-		# If we are the server, let everyone know about the new player
-		rpc_id(id, "register_player", 1, player_name) # Send myself to new dude
-		for p_id in players: # Then, for each remote player
-			rpc_id(id, "register_player", p_id, players[p_id]) # Send player to new dude
-			rpc_id(p_id, "register_player", id, new_player_name) # Send new dude to player
+#	if get_tree().is_network_server():
+#		# If we are the server, let everyone know about the new player
+#		rpc_id(id, "register_player", 1, player_name) # Send myself to new dude
+#		for p_id in players: # Then, for each remote player
+#			rpc_id(id, "register_player", p_id, players[p_id]) # Send player to new dude
+#			rpc_id(p_id, "register_player", id, new_player_name) # Send new dude to player
 
 	players[id] = new_player_name
 	emit_signal("player_list_changed")

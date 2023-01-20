@@ -83,7 +83,7 @@ var hit_player
 var body_splat
 var voice_player
 var pain_sound
-var win_sound
+var win_player
 onready var the_win_sound = preload("res://sounds/info/Win_Sound.mp3")
 
 # Gibs
@@ -144,7 +144,7 @@ func _ready():
 	body_splat = preload("res://sounds/physics/body_splat.wav")
 	voice_player = get_node("audio/voice")
 	pain_sound = preload("res://sounds/pain/pain.wav")
-	win_sound = $"audio/win"
+	win_player = get_node("audio/win")
 
 	# Gibs
 	gibs_scn = preload("res://models/characters/gibs.tscn")
@@ -195,7 +195,6 @@ func _physics_process(delta):
 		rpc("check_weapons")
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-#			die()
 			rpc("die")
 
 
@@ -426,8 +425,8 @@ func process_movement(delta):
 		#hurt(50)
 		rpc("hurt", 50)
 	if (vel.length() - prev_vel.length()) < -40:
-		#die()
-		rpc("die")
+		rpc_id(1, "die")
+		rpc_id(get_tree().get_network_unique_id(), "die")
 
 	prev_vel = vel
 
@@ -622,8 +621,8 @@ remotesync func die():
 func set_health(value):
 	health = value
 	if health <= 0:
-#		die()
-		rpc("die")
+		rpc_id(1, "die")
+		rpc_id(get_tree().get_network_unique_id(), "die")
 
 
 func get_time_left():

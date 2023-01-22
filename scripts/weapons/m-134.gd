@@ -14,7 +14,6 @@ var can_fire = true
 # Ammo
 export var MAX_AMMO = 2000
 onready var ammo = 0 setget set_ammo
-onready var ammo_supply = 0 setget set_ammo_supply
 signal ammo_changed
 var is_reloading = false
 
@@ -50,7 +49,6 @@ func _ready():
 	if get_tree().is_network_server():
 		spawn_position()
 	set_ammo(MAX_AMMO)
-	set_ammo_supply(MAX_AMMO)
 
 	connect("ammo_changed", self, "_on_ammo_changed")
 	connect("state_changed", self, "_on_state_changed")
@@ -144,23 +142,6 @@ remotesync func fire():
 					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
 
 
-# Reloading
-remotesync func reload():
-	if ammo < MAX_AMMO and ammo_supply > 0 and is_reloading != true:
-		is_reloading = true
-		get_node("animation_player").play("reload")
-		get_node("audio/reload").play()
-		var ammo_required = MAX_AMMO - ammo
-		if ammo_supply >= ammo_required:
-			set_ammo_supply(ammo_supply - ammo_required)
-			set_ammo(ammo + ammo_required)
-		else:
-			set_ammo(ammo + ammo_supply)
-			set_ammo_supply(0)
-		yield(get_node("animation_player"), "animation_finished")
-		is_reloading = false
-
-
 remotesync func create_impact(scn, scn_fx, result, from):
 	if scn is EncodedObjectAsID or scn_fx is EncodedObjectAsID:
 		return
@@ -180,16 +161,11 @@ remotesync func create_impact(scn, scn_fx, result, from):
 
 func set_ammo(value):
 	ammo = value
-	emit_signal("ammo_changed", ammo, ammo_supply)
+	emit_signal("ammo_changed", ammo)
 
 
-func set_ammo_supply(value):
-	ammo_supply = value
-	emit_signal("ammo_changed", ammo, ammo_supply)
-
-
-func _on_ammo_changed(ammo_value, ammo_supply_value):
-	get_node("hud/ammo").text = "AMMO: " + str(ammo_value) + "/" + str(ammo_supply_value)
+func _on_ammo_changed(ammo_value):
+	get_node("hud/ammo").text = "AMMO: " + str(ammo_value)
 
 
 func set_state(value):
@@ -230,7 +206,6 @@ remotesync func pick():
 		if shooter is Player and !shooter.is_dead and is_pickable:
 			if shooter.equipped_weapon == null:
 				var current_ammo = ammo
-				var current_ammo_supply = ammo_supply
 				is_pickable = false
 				var weapon_container = shooter.get_node("shape/cube/root/skeleton/bone_attachment/weapon")
 				# get_parent().remove_child(self)
@@ -244,7 +219,6 @@ remotesync func pick():
 				weapon_copy.set_rotation(Vector3(0, 179.5, 0))
 				weapon_copy.set_translation(Vector3(-0.05, -0.72, -0.18))
 				weapon_copy.set_scale(Vector3(1.6, 1.6, 1.6))
-				weapon_copy.set_ammo_supply(current_ammo_supply)
 				if shooter.is_network_master():
 					weapon_copy.get_node("hud/ammo").visible = true
 					weapon_copy.get_node("audio/ammo").play()
@@ -255,13 +229,11 @@ remotesync func pick():
 remotesync func drop():
 	is_reloading = false
 	var current_ammo = ammo
-	var current_ammo_supply = ammo_supply
 	get_parent().remove_child(self)
 	main_scn.get_node("weapons").add_child(self)
 	self.global_transform.origin = shooter.global_transform.origin + shooter.shape_orientation.basis.z * 1.5 + shooter.shape_orientation.basis.x * 1.8
 	self.set_rotation(Vector3(0, 0, 0))
 	set_ammo(current_ammo)
-	set_ammo_supply(current_ammo_supply)
 	if shooter.is_network_master():
 		get_node("hud/ammo").visible = false
 	shooter.equipped_weapon = null

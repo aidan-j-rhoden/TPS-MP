@@ -195,7 +195,8 @@ func _physics_process(delta):
 		rpc("check_weapons")
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-			rpc("die")
+			rpc_id(1, "die")
+			die()
 
 
 func _input(event):
@@ -426,7 +427,7 @@ func process_movement(delta):
 		rpc("hurt", 50)
 	if (vel.length() - prev_vel.length()) < -40:
 		rpc_id(1, "die")
-		rpc_id(get_tree().get_network_unique_id(), "die")
+		die()
 
 	prev_vel = vel
 
@@ -594,6 +595,7 @@ remotesync func die():
 			kill_count -= 1
 		if is_in_vehicle:
 			rpc_id(1, "enter_vehicle")
+			enter_vehicle()
 		hit_player.stream = body_splat
 		hit_player.play()
 
@@ -622,7 +624,7 @@ func set_health(value):
 	health = value
 	if health <= 0:
 		rpc_id(1, "die")
-		rpc_id(get_tree().get_network_unique_id(), "die")
+		die()
 
 
 func get_time_left():

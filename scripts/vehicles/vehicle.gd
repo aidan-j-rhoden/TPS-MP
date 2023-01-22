@@ -158,7 +158,7 @@ func _physics_process(delta):
 		turbo_text.add_color_override("font_color", Color(255, 165, 0, 255))
 	if driver:
 		print(gamestate.players)
-		if driver.name == gamestate.player_name:#is_network_master():
+		if int(driver.name) == get_tree().get_network_unique_id():#is_network_master():
 			process_input(delta)
 			hud.visible = true
 	else:
@@ -277,7 +277,7 @@ master func process_other_stuff(delta):
 			if !w.skid.playing:
 				w.skid.stream = skid_sound
 				w.skid.play()
-		
+
 		var skid_unit_size = 0.0
 		var skid_unit_size_target = (1 - w.node.get_skidinfo()) * 5
 		skid_unit_size += (skid_unit_size_target - skid_unit_size) * 0.25
@@ -287,7 +287,7 @@ master func process_other_stuff(delta):
 			var skid = skid_scn.instance()
 			main_scn.add_child(skid)
 			skid.global_transform.origin = w.node.global_transform.origin + Vector3(0, -w.node.wheel_radius + 0.15, 0)
-		
+
 		w.rpm = (lvl / (w.node.wheel_radius * TAU)) * 300
 
 	# Engine

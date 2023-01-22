@@ -93,7 +93,7 @@ func refresh_lobby():
 	if players.size() == 0 and not get_tree().is_network_server():
 		send_to_server = true
 		get_node("players/start").disabled = false
-	else:
+	elif players.size() > 0 and not send_to_server:
 		get_node("players/start").disabled = not get_tree().is_network_server()
 
 

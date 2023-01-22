@@ -266,7 +266,8 @@ func process_input(delta):
 		if equipped_weapon != null:
 			if weapon_equipped:
 				if (Input.is_action_just_pressed("lmb") or Input.is_action_pressed("auto_fire"))  and is_aiming:
-					equipped_weapon.rpc("fire")
+					equipped_weapon.rpc_id(1, "fire")
+					equipped_weapon.fire()
 				if Input.is_action_just_pressed("reload"):
 					equipped_weapon.rpc("reload")
 				if Input.is_action_just_pressed("drop"):
@@ -357,7 +358,7 @@ func process_movement(delta):
 	dir.y = 0
 	dir = dir.normalized()
 
-	if !falling_to_death:
+	if not falling_to_death:
 		vel.y += delta * GRAVITY
 	else:
 		vel.y = 0
@@ -593,9 +594,9 @@ remotesync func die():
 			death_canvas.visible = true
 			$hud/death_canvas/animation_player.play("die")
 			kill_count -= 1
-		if is_in_vehicle:
-			rpc_id(1, "enter_vehicle")
-			enter_vehicle()
+			if is_in_vehicle:
+				rpc_id(1, "enter_vehicle")
+				enter_vehicle()
 		hit_player.stream = body_splat
 		hit_player.play()
 
@@ -618,6 +619,7 @@ remotesync func die():
 		is_dead = true
 		get_node("timer_respawn").start()
 		get_node("shape").disabled = true
+	vel = Vector3(0, 0, 0)
 
 
 func set_health(value):
@@ -639,18 +641,19 @@ func get_time_left():
 
 # Respawn
 func _on_timer_respawn_timeout():
-	rpc("respawn")
+	rpc_id(1, "respawn")
+	respawn()
 
 
 remotesync func respawn():
 	if is_network_master():
 		death_canvas.visible = false
+		global_transform.origin = main_scn.get_node("spawn_points").get_child(randi() % main_scn.get_node("spawn_points").get_child_count()).global_transform.origin
 	get_node("shape").disabled = false
 	falling_to_death = false
 	is_dead = false
 	set_health(100)
-	vel = Vector3()
-	global_transform.origin = main_scn.get_node("spawn_points").get_child(randi() % main_scn.get_node("spawn_points").get_child_count()).global_transform.origin
+	vel = Vector3(0, 0, 0)
 	visible = true
 	for i in self.get_children():
 		if i is Wound:

@@ -116,31 +116,31 @@ remotesync func fire():
 					if result.collider.health <= DAMAGE and not result.collider.is_dead:
 						shooter.kill_count += 2
 						result.collider.rpc("killed_you", gamestate.get_player_name())
-					result.collider.rpc("hurt", DAMAGE)
+					result.collider.rpc_id(1, "hurt", DAMAGE)
 #					var position = result.position - result.collider.global_transform.origin
 #					var impulse = (result.position - global_transform.origin).normalized()
 #					result.collider.apply_impulse(position, impulse * knockback_multiplier)
-					result.collider.rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
-					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
+					result.collider.rpc_id(1, "create_impact", "wound", result, shooter.camera.global_transform.basis.z)
+					create_impact("wound", result, shooter.camera.global_transform.basis.z)
 				if result.collider is KinematicBody and result.collider.get_parent() is VehicleBody:
-					result.collider.rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
-					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
+					result.collider.rpc_id(1, "create_impact", "wound", result, shooter.camera.global_transform.basis.z)
+					create_impact("wound", result, shooter.camera.global_transform.basis.z)
 					if result.collider.health <= DAMAGE and not result.collider.is_dead:
 						shooter.kill_count += 2
 						result.collider.rpc("killed_you", gamestate.get_player_name())
-					result.collider.rpc("hurt", DAMAGE)
+					result.collider.rpc_id(1, "hurt", DAMAGE)
 				if result.collider is RigidBody and not result.collider is Gibs:
 					var position = result.position - result.collider.global_transform.origin
 					var impulse = (result.position - global_transform.origin).normalized()
 					result.collider.apply_impulse(position, impulse * 10)
-					rpc("create_impact", scn_impact, scn_impact_fx, result, shooter.camera.global_transform.basis.z)
+					create_impact("impact", result, shooter.camera.global_transform.basis.z)
 				if result.collider is StaticBody and not result.collider is Gibs:
-					rpc("create_impact", scn_impact, scn_impact_fx, result, shooter.camera.global_transform.basis.z)
+					create_impact("impact", result, shooter.camera.global_transform.basis.z)
 				if result.collider is Gibs:
 					var position = result.position - result.collider.global_transform.origin
 					var impulse = (result.position - global_transform.origin).normalized()
 					result.collider.apply_impulse(position, impulse * 8)
-					rpc("create_impact", scn_wound, scn_blood_fx, result, shooter.camera.global_transform.basis.z)
+					create_impact("wound", result, shooter.camera.global_transform.basis.z)
 
 
 # Reloading
@@ -160,17 +160,23 @@ remotesync func reload():
 		is_reloading = false
 
 
-remotesync func create_impact(scn, scn_fx, result, from):
-	if scn is EncodedObjectAsID or scn_fx is EncodedObjectAsID:
-		return
-	var impact = scn.instance()
+remotesync func create_impact(type, result, from):
+#	if scn is EncodedObjectAsID or scn_fx is EncodedObjectAsID:
+#		return
+	var impact
+	var impact_fx
+	if type == "wound":
+		impact = scn_wound.instance()
+		impact_fx = scn_blood_fx.instance()
+	else:
+		impact = scn_impact.instance()
+		impact_fx = scn_impact_fx.instance()
 	result.collider.add_child(impact)
 	impact.global_transform.origin = result.position
 	impact.global_transform = utils.look_at_with_z(impact.global_transform, result.normal, from)
 	randomize()
 	impact.rotation = Vector3(impact.rotation.x, impact.rotation.y, rand_range(-180, 180))
 
-	var impact_fx = scn_fx.instance()
 	get_tree().root.add_child(impact_fx)
 	impact_fx.global_transform.origin = result.position
 	impact_fx.emitting = true

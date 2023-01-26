@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://models/maps/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/props/barrel.tscn" type="PackedScene" id=2]
@@ -7,9 +7,6 @@
 [ext_resource path="res://scenes/vehicles/truck.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/vehicles/auto_truck.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/main.gd" type="Script" id=7]
-[ext_resource path="res://scenes/weapons/huntingRifle.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scenes/weapons/m-134.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/weapons/Sting.tscn" type="PackedScene" id=10]
 
 [node name="main" type="Spatial"]
 script = ExtResource( 7 )
@@ -196,17 +193,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8385, -0.09903, -17.7662 )
 [node name="glock_4" parent="weapons" instance=ExtResource( 4 )]
 transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, 331.788, 16.7528, 121.991 )
 
-[node name="SniperOther" parent="weapons" instance=ExtResource( 8 )]
-transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, 48.4171, 0.306088, 21.0635 )
-
 [node name="glock_5" parent="weapons" instance=ExtResource( 4 )]
 transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, -299.293, 1.17843, -190.661 )
 
 [node name="glock_6" parent="weapons" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 321.673, 0.490235, -170.573 )
-
-[node name="SniperOther_2" parent="weapons" instance=ExtResource( 8 )]
-transform = Transform( 0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, -360.098, 6.07155, 360.52 )
 
 [node name="truck" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.87661, 0.595084, 0.674341 )
@@ -223,11 +214,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.3472, -0.0579181, 6.06323 )
 [node name="game_timer" type="Timer" parent="."]
 wait_time = 300.0
 one_shot = true
-
-[node name="minigun_m-134" parent="." instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.62693, 1.00715, 7.93826 )
-
-[node name="sting" parent="." instance=ExtResource( 10 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.3502, 1.13635, 4.55751 )
 
 [connection signal="timeout" from="game_timer" to="." method="_on_game_timer_timeout"]

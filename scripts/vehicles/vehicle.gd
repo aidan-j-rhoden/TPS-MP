@@ -157,8 +157,7 @@ func _physics_process(delta):
 	else:
 		turbo_text.add_color_override("font_color", Color(255, 165, 0, 255))
 	if driver:
-		print(gamestate.players)
-		if int(driver.name) == get_tree().get_network_unique_id():#is_network_master():
+		if driver == get_tree().get_network_unique_id():#is_network_master():
 			process_input(delta)
 			hud.visible = true
 	else:
@@ -190,7 +189,7 @@ func process_input(_delta):
 		brake_val = 0.0
 
 	# overrules for keyboard
-	if driver.is_network_master():
+	if driver == get_tree().get_network_unique_id():
 		if Input.is_action_pressed("movement_forward"):
 			throttle_val_target = 1.0
 		if Input.is_action_pressed("movement_backward"):
@@ -345,9 +344,8 @@ func process_sounds():
 		for b in bodies:
 			if b is Player:
 				if driver:
-					driver.kill_count += 1
 					b.rpc("killed_you", gamestate.get_player_name())
-				b.rpc("die")
+				b.rpc_id(1, "die")
 
 	if bodies.size() > 0 and abs(prev_lvl - lvl) > 0.5:
 		if !collision_player.playing:

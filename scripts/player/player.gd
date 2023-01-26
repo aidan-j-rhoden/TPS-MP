@@ -159,8 +159,6 @@ func _ready():
 	ray_ledge_top = get_node("shape/rays/ledge_top")
 	ray_vehicles = get_node("shape/rays/vehicles")
 
-	get_node("timer_respawn").connect("timeout", self, "_on_timer_respawn_timeout")
-
 	if is_network_master():
 		camera.current = true
 		crosshair.visible = true
@@ -257,6 +255,7 @@ func process_input(delta):
 		# Enter vehicle
 		if Input.is_action_just_pressed("enter_vehicle"):
 			rpc_id(1, "enter_vehicle")
+			enter_vehicle()
 
 		# Change weapon
 		if Input.is_action_just_released("next_weapon"):
@@ -465,7 +464,7 @@ remotesync func enter_vehicle():
 			if ray_vehicles.get_collider() is VehicleBody:# and ray_vehicles.get_collider().driver == null:
 				if ray_vehicles.get_collider().name == "truck_auto":
 					vehicle = ray_vehicles.get_collider()
-					vehicle.driver = self
+					vehicle.driver = get_tree().get_network_unique_id()
 					voice_player.stream = pain_sound #Temp
 					voice_player.play()
 				else:
@@ -478,12 +477,12 @@ remotesync func enter_vehicle():
 #					shape.disabled = true
 
 					if vehicle.driver == null:
+						vehicle.driver = get_tree().get_network_unique_id()
 						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * 0.5 + vehicle.transform.basis.y * 1.75
 					else:
 						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * -0.5 + vehicle.transform.basis.y * 1.75
 
-					vehicle.driver = self
-					vehicle.set_network_master(int(self.get_name()))
+#					vehicle.set_network_master(int(self.get_name()))
 					shape.rotation.y = vehicle.get_node("body").transform.basis.get_euler().y
 
 					is_in_vehicle = true

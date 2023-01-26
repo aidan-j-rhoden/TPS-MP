@@ -213,7 +213,7 @@ func _on_state_changed(value):
 			get_node("area").monitoring = false
 			get_node("area/collision_shape").disabled = true
 		DROPPED:
-			rpc_unreliable("update_trans", translation)
+#			rpc_unreliable("update_trans", translation)
 			get_node("animation_player").seek(0, true)
 			get_node("animation_player").stop()
 			get_node("area").monitoring = true
@@ -226,8 +226,10 @@ remote func update_trans(trans):
 
 # Pick up weapon
 remotesync func _on_body_entered(body):
-	shooter = body
-	rpc_id(1, "pick")
+	if is_network_master():
+		shooter = body
+		rpc_id(1, "pick")
+		pick()
 
 
 remotesync func pick():

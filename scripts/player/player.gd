@@ -464,7 +464,7 @@ remotesync func enter_vehicle():
 			if ray_vehicles.get_collider() is VehicleBody:# and ray_vehicles.get_collider().driver == null:
 				if ray_vehicles.get_collider().name == "truck_auto":
 					vehicle = ray_vehicles.get_collider()
-					vehicle.driver = self.get_tree().get_network_unique_id()
+					vehicle.driver = get_tree().get_network_unique_id()
 					voice_player.stream = pain_sound #Temp
 					voice_player.play()
 				else:
@@ -477,6 +477,7 @@ remotesync func enter_vehicle():
 					self.add_collision_exception_with(vehicle)
 
 					if vehicle.driver == null:
+						vehicle.driver = get_tree().get_network_unique_id()
 						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * 0.5 + vehicle.transform.basis.y * 1.75
 					else:
 						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * -0.5 + vehicle.transform.basis.y * 1.75

@@ -190,7 +190,7 @@ func process_input(_delta):
 		brake_val = 0.0
 
 	# overrules for keyboard
-	if driver and get_tree().get_network_unique_id() == driver:
+	if driver == get_tree().get_network_unique_id():
 		if Input.is_action_pressed("movement_forward"):
 			throttle_val_target = 1.0
 		if Input.is_action_pressed("movement_backward"):
@@ -350,7 +350,7 @@ func process_sounds():
 					rpc_id(driver, "score_changed", 1)
 #					driver.kill_count += 1
 					b.rpc("killed_you", gamestate.get_player_name())
-				b.rpc("die")
+				b.rpc_id(1, "die")
 
 	if bodies.size() > 0 and abs(prev_lvl - lvl) > 0.5:
 		if !collision_player.playing:

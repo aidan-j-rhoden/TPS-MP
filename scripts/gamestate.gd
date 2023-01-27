@@ -172,9 +172,9 @@ func begin_game():
 func end_game():
 	if has_node("/root/main"): # Game is in progress
 		# End it
+		emit_signal("game_ended")
 		get_node("/root/main").queue_free()
 
-	emit_signal("game_ended")
 	players.clear()
 	get_tree().set_network_peer(null) # End networking
 

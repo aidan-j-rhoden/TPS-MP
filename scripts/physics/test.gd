@@ -28,8 +28,8 @@ func _ready():
 	whoosh = get_node("audio/whoosh")
 
 
-func _physics_process(delta):
-	process_stuff()
+#func _physics_process(delta):
+#	process_stuff()
 
 
 func process_stuff():
@@ -91,3 +91,4 @@ func process_stuff():
 remote func update_trans_rot(trans, rot):
 	translation = trans
 	rotation = rot
+	process_stuff()

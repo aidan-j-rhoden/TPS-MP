@@ -105,7 +105,7 @@ func _on_start_pressed():
 
 
 func _on_round_time_text_changed(new_text):
-	gamestate.set_time(int($settings/v_box_container/round_time.text))
+	gamestate.set_time(int(new_text))
 
 
 #func all_players_ready():

@@ -234,8 +234,6 @@ remotesync func pick():
 	if shooter != null:
 		if shooter is Player and !shooter.is_dead and is_pickable:
 			if shooter.equipped_weapon == null:
-				var current_ammo = ammo
-				var current_ammo_supply = ammo_supply
 				is_pickable = false
 				var weapon_container = shooter.get_node("shape/cube/root/skeleton/bone_attachment/weapon")
 				get_parent().remove_child(self)

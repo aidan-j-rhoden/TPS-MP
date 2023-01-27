@@ -1,5 +1,5 @@
 extends CPUParticles
 
-func _process(delta):
+func _process(_delta):
 	if !emitting:
 		queue_free()

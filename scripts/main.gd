@@ -11,7 +11,7 @@ func _ready():
 	timer.start()
 
 
-func _process(delta):
+func _process(_delta):
 	if timer.get_time_left() <= round_time/2:
 		pass
 #		cycle_light() #TODO: fix this after networking

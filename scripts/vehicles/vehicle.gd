@@ -157,8 +157,7 @@ func _physics_process(delta):
 	else:
 		turbo_text.add_color_override("font_color", Color(255, 165, 0, 255))
 	if driver:
-		print(gamestate.players)
-		if int(driver.name) == get_tree().get_network_unique_id():#is_network_master():
+		if driver == get_tree().get_network_unique_id():#is_network_master():
 			process_input(delta)
 			hud.visible = true
 	else:
@@ -166,8 +165,9 @@ func _physics_process(delta):
 		brake_val = 0.5
 		hud.visible = false
 
-	if is_network_master():
-		rpc("process_other_stuff", delta)
+#	if is_network_master():
+#		rpc("process_other_stuff", delta)
+	process_other_stuff(delta)
 
 	if turbo_timer.time_left <= 7.8:
 		turbo_active = false
@@ -190,7 +190,7 @@ func process_input(_delta):
 		brake_val = 0.0
 
 	# overrules for keyboard
-	if driver.is_network_master():
+	if driver and get_tree().get_network_unique_id() == driver:
 		if Input.is_action_pressed("movement_forward"):
 			throttle_val_target = 1.0
 		if Input.is_action_pressed("movement_backward"):
@@ -234,6 +234,8 @@ func process_input(_delta):
 				song = tunes.size() - 1
 			tunes_player.stream = tunes[song]
 			tunes_player.play()
+
+	rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM, throttle_val)
 
 
 master func process_other_stuff(delta):
@@ -309,7 +311,7 @@ master func process_other_stuff(delta):
 	prev_pos = translation
 	prev_engine_RPM = engine_RPM
 
-	rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM)
+#	rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM)
 
 
 remote func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):
@@ -345,7 +347,8 @@ func process_sounds():
 		for b in bodies:
 			if b is Player:
 				if driver:
-					driver.kill_count += 1
+					rpc_id(driver, "score_changed", 1)
+#					driver.kill_count += 1
 					b.rpc("killed_you", gamestate.get_player_name())
 				b.rpc("die")
 

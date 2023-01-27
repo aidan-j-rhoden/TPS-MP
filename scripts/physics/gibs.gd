@@ -27,7 +27,7 @@ func _ready():
 	hit = get_node("audio/hit")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	process_stuff()
 
 

@@ -48,8 +48,7 @@ func _connected_ok(): # Callback from SceneTree, only for clients (not server)
 	# Registration of a client beings here, tell everyone that we are here
 #	rpc("register_player", get_tree().get_network_unique_id(), player_name)
 	emit_signal("connection_succeeded")
-	if not get_tree().is_network_server():
-		rpc_id(1, "player_set", player_name)
+	rpc_id(1, "player_set", player_name)
 
 
 func _server_disconnected(): # Callback from SceneTree, only for clients (not server)
@@ -181,11 +180,11 @@ func end_game():
 
 
 func _ready():
-	assert(get_tree().connect("network_peer_connected", self, "_player_connected") == 0)
-	assert(get_tree().connect("network_peer_disconnected", self,"_player_disconnected") == 0)
-	assert(get_tree().connect("connected_to_server", self, "_connected_ok") == 0)
-	assert(get_tree().connect("connection_failed", self, "_connected_fail") == 0)
-	assert(get_tree().connect("server_disconnected", self, "_server_disconnected") == 0)
+	get_tree().connect("network_peer_connected", self, "_player_connected")
+	get_tree().connect("network_peer_disconnected", self,"_player_disconnected")
+	get_tree().connect("connected_to_server", self, "_connected_ok")
+	get_tree().connect("connection_failed", self, "_connected_fail")
+	get_tree().connect("server_disconnected", self, "_server_disconnected")
 
 
 func set_time(time):

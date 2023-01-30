@@ -335,8 +335,7 @@ master func process_other_stuff(delta):
 	prev_pos = translation
 	prev_engine_RPM = engine_RPM
 
-	if not get_tree().is_network_server():
-		rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM)
+	rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM)
 
 
 remote func update_trans_rot(trans, rot, body_rot, drv, en_f, st_angle, en_RPM):

@@ -235,7 +235,8 @@ func process_input(_delta):
 			tunes_player.stream = tunes[song]
 			tunes_player.play()
 
-	rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM, throttle_val)
+	if not get_tree().is_network_server():
+		rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM, throttle_val)
 
 
 master func process_other_stuff(delta):

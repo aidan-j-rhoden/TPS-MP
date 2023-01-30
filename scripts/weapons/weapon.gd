@@ -51,9 +51,9 @@ func _ready():
 	set_ammo(MAX_AMMO)
 	set_ammo_supply(MAX_AMMO)
 
-	connect("ammo_changed", self, "_on_ammo_changed")
-	connect("state_changed", self, "_on_state_changed")
-	get_node("area").connect("body_entered", self, "_on_body_entered")
+	assert(connect("ammo_changed", self, "_on_ammo_changed") == 0, "Could not connect ammo_changed")
+	assert(connect("state_changed", self, "_on_state_changed") == 0, "Failed to connect state_changed")
+	assert(get_node("area").connect("body_entered", self, "_on_body_entered") == 0, "Failed to connect body_entered signal")
 
 
 func _physics_process(delta):

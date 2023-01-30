@@ -165,7 +165,7 @@ func _ready():
 	else:
 		$hud.visible = false
 
-	get_tree().get_root().connect("size_changed", self, "resize_viewport")
+	assert(get_tree().get_root().connect("size_changed", self, "resize_viewport") == 0, "Failed to connect resize_viewport")
 
 
 func _init():
@@ -189,11 +189,16 @@ func _physics_process(delta):
 			process_input(delta)
 		if !is_in_vehicle and not is_dead:
 			process_movement(delta)
-		rpc_unreliable("process_animations", is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
-		rpc("check_weapons")
+		if not get_tree().is_network_server():
+			rpc_unreliable_id(1, "process_animations", is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
+		process_animations(is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
+		if not get_tree().is_network_server():
+			rpc_id(1, "check_weapons")
+		check_weapons()
 		if global_transform.origin.y < -12:
 			falling_to_death = true
-			rpc_id(1, "die")
+			if not get_tree().is_network_server():
+				rpc_id(1, "die")
 			die()
 
 
@@ -254,7 +259,8 @@ func process_input(delta):
 
 		# Enter vehicle
 		if Input.is_action_just_pressed("enter_vehicle"):
-#			rpc_id(1, "enter_vehicle")
+			if not get_tree().is_network_server():
+				rpc_id(1, "enter_vehicle")
 			enter_vehicle()
 
 		# Change weapon
@@ -265,12 +271,15 @@ func process_input(delta):
 		if equipped_weapon != null:
 			if weapon_equipped:
 				if (Input.is_action_just_pressed("lmb") or Input.is_action_pressed("auto_fire"))  and is_aiming:
-					equipped_weapon.rpc_id(1, "fire")
+					if not get_tree().is_network_server():
+						equipped_weapon.rpc_id(1, "fire")
 					equipped_weapon.fire()
 				if Input.is_action_just_pressed("reload"):
 					equipped_weapon.rpc("reload")
 				if Input.is_action_just_pressed("drop"):
-					equipped_weapon.rpc("drop")
+					if not get_tree().is_network_server():
+						equipped_weapon.rpc_id(1, "drop")
+					equipped_weapon.drop()
 
 		# Aiming
 		var camera_target = camera_target_initial
@@ -426,13 +435,15 @@ func process_movement(delta):
 		#hurt(50)
 		rpc("hurt", 50)
 	if (vel.length() - prev_vel.length()) < -40:
-		rpc_id(1, "die")
+		if not get_tree().is_network_server():
+			rpc_id(1, "die")
 		die()
 
 	prev_vel = vel
 
 	# Network
-	rpc_unreliable_id(1, "update_trans_rot", translation, rotation, shape.rotation)
+	if not get_tree().is_network_server():
+		rpc_unreliable_id(1, "update_trans_rot", translation, rotation, shape.rotation)
 
 
 # Check for weapons
@@ -468,7 +479,10 @@ remotesync func enter_vehicle():
 					voice_player.stream = pain_sound #Temp
 					voice_player.play()
 				else:
-					rpc_id(1, "enter_vehicle")
+#					if not get_tree().is_network_server():
+#						rpc_id(1, "enter_vehicle")
+#					else:
+#						enter_vehicle()
 					#camera.translation = Vector3(0.5, -0.1, 0.2) #Edit this
 					camera.translation = Vector3(0, 0, 5)
 					vehicle = ray_vehicles.get_collider()
@@ -595,7 +609,8 @@ remotesync func die():
 			$hud/death_canvas/animation_player.play("die")
 			kill_count -= 1
 			if is_in_vehicle:
-				rpc_id(1, "enter_vehicle")
+				if not get_tree().is_network_server():
+					rpc_id(1, "enter_vehicle")
 				enter_vehicle()
 		hit_player.stream = body_splat
 		hit_player.play()
@@ -625,7 +640,8 @@ remotesync func die():
 func set_health(value):
 	health = value
 	if health <= 0:
-		rpc_id(1, "die")
+		if not get_tree().is_network_server():
+			rpc_id(1, "die")
 		die()
 
 
@@ -641,7 +657,8 @@ func get_time_left():
 
 # Respawn
 func _on_timer_respawn_timeout():
-	rpc_id(1, "respawn")
+	if not get_tree().is_network_server():
+		rpc_id(1, "respawn")
 	respawn()
 
 

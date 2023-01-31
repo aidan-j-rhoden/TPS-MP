@@ -102,7 +102,6 @@ var vehicle
 # Weapons
 var equipped_weapon
 
-
 func _ready():
 	shape = get_node("shape")
 
@@ -265,19 +264,23 @@ func process_input(delta):
 
 		# Change weapon
 		if Input.is_action_just_released("next_weapon"):
-			rpc("toggle_weapon")
+			if not get_tree().is_network_server():
+				rpc_id(1,"toggle_weapon")
+			toggle_weapon()
 
 		# Dealing with weapons
 		if equipped_weapon != null:
 			if weapon_equipped:
-				if (Input.is_action_just_pressed("lmb") or Input.is_action_pressed("auto_fire"))  and is_aiming:
-					if not get_tree().is_network_server():
+				if (Input.is_action_just_pressed("lmb") or Input.is_action_pressed("auto_fire")) and is_aiming:
+					if not get_tree().is_network_server(): # Debug
 						equipped_weapon.rpc_id(1, "fire")
 					equipped_weapon.fire()
 				if Input.is_action_just_pressed("reload"):
-					equipped_weapon.rpc("reload")
+					if not get_tree().is_network_server(): # Debug
+						equipped_weapon.rpc_id(1, "reload")
+					equipped_weapon.reload()
 				if Input.is_action_just_pressed("drop"):
-					if not get_tree().is_network_server():
+					if not get_tree().is_network_server(): # Debug
 						equipped_weapon.rpc_id(1, "drop")
 					equipped_weapon.drop()
 

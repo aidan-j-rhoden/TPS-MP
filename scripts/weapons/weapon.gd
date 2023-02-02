@@ -44,8 +44,7 @@ var drop_timeout = 0
 var drop_timeout_start = false
 var is_pickable = true
 
-onready var main_scn = get_tree().root.get_child(get_tree().root.get_child_count() - 1)
-
+onready var main_scn = $"/root/main" #get_tree().root.get_child(get_tree().root.get_child_count() - 1)
 
 func _ready():
 	set_ammo(MAX_AMMO)
@@ -210,8 +209,8 @@ func _on_state_changed(value):
 	match value:
 		PICKED:
 			get_node("animation_player").play("idle")
-			get_node("area").monitoring = false
-			get_node("area/collision_shape").disabled = true
+			get_node("area").set_deferred("monitoring", false)
+			get_node("area/collision_shape").set_deferred("disabled", true)
 		DROPPED:
 #			rpc_unreliable("update_trans", translation)
 			get_node("animation_player").seek(0, true)
@@ -238,26 +237,25 @@ remotesync func pick():
 			if shooter.equipped_weapon == null:
 				is_pickable = false
 				var weapon_container = shooter.get_node("shape/cube/root/skeleton/bone_attachment/weapon")
-				get_parent().remove_child(self)
-				weapon_container.add_child(self)
+#				get_parent().remove_child(self)
+#				weapon_container.add_child(self)
 				transform = Transform.IDENTITY
 				set_state(PICKED)
 				shooter.weapon_equipped = true
+				var weapon_copy = self.duplicate(7)
+				weapon_container.add_child(weapon_copy)
+				weapon_copy.transform = Transform.IDENTITY
+				weapon_copy.shooter = shooter
+				weapon_copy.set_state(PICKED)
+				shooter.weapon_equipped = true
+				var current_ammo = ammo
+				var current_ammo_supply = ammo_supply
+				weapon_copy.set_ammo(current_ammo)
+				weapon_copy.set_ammo_supply(current_ammo_supply)
 				if shooter.is_network_master():
-					get_node("hud/ammo").visible = true
-					get_node("audio/ammo").play()
-#				var weapon_copy = self.duplicate(7)
-#				weapon_container.add_child(weapon_copy)
-#				weapon_copy.transform = Transform.IDENTITY
-#				weapon_copy.shooter = shooter
-#				weapon_copy.set_state(PICKED)
-#				shooter.weapon_equipped = true
-#				weapon_copy.set_ammo(current_ammo)
-#				weapon_copy.set_ammo_supply(current_ammo_supply)
-#				if shooter.is_network_master():
-#					weapon_copy.get_node("hud/ammo").visible = true
-#					weapon_copy.get_node("audio/ammo").play()
-#				queue_free()
+					weapon_copy.get_node("hud/ammo").visible = true
+					weapon_copy.get_node("audio/ammo").play()
+				queue_free()
 
 
 # Drop weapon

@@ -236,6 +236,7 @@ func process_input(delta):
 
 
 master func process_other_stuff(delta):
+	steer_val = steer_val / clamp(1, current_speed_mps / 15, INF)
 	steer_target = steer_val * MAX_STEER_ANGLE
 
 	if (steer_target < steer_angle):

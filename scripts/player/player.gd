@@ -159,8 +159,6 @@ func _ready():
 	ray_ledge_top = get_node("shape/rays/ledge_top")
 	ray_vehicles = get_node("shape/rays/vehicles")
 
-	get_node("timer_respawn").connect("timeout", self, "_on_timer_respawn_timeout")
-
 	if is_network_master():
 		camera.current = true
 		crosshair.visible = true

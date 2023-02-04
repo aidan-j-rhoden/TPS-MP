@@ -475,7 +475,7 @@ remotesync func toggle_weapon():
 remotesync func enter_vehicle():
 	if !is_in_vehicle:
 		if ray_vehicles.is_colliding():
-			if ray_vehicles.get_collider() is VehicleBody:# and ray_vehicles.get_collider().driver == null:
+			if ray_vehicles.get_collider() is VehicleBody and ray_vehicles.get_collider().driver == -1:
 				if ray_vehicles.get_collider().name == "truck_auto":
 					vehicle = ray_vehicles.get_collider()
 					vehicle.driver = get_tree().get_network_unique_id()
@@ -493,11 +493,8 @@ remotesync func enter_vehicle():
 					vehicle.add_child(self)
 					self.add_collision_exception_with(vehicle)
 
-					if vehicle.driver == null:
-						vehicle.driver = get_tree().get_network_unique_id()
-						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * 0.5 + vehicle.transform.basis.y * 1.75
-					else:
-						global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * -0.5 + vehicle.transform.basis.y * 1.75
+					vehicle.driver = get_tree().get_network_unique_id()
+					global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * 0.5 + vehicle.transform.basis.y * 1.75
 
 					vehicle.driver = self.get_tree().get_network_unique_id()
 #					vehicle.set_network_master(int(self.get_name()))
@@ -520,13 +517,13 @@ remotesync func enter_vehicle():
 
 			vel = vehicle.linear_velocity * 1.5
 
-			vehicle.driver = null
+			vehicle.driver = -1
 			vehicle = null
 			is_in_vehicle = false
 			# Temporary
 			camera.clip_to_bodies = true
 		else:
-			vehicle.driver = null
+			vehicle.driver = -1
 			vehicle = null
 			is_in_vehicle = false
 

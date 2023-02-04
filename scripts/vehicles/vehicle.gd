@@ -1,6 +1,6 @@
 extends VehicleBody
 
-var driver
+var driver: int = -1
 
 # Behaviour values
 export var MAX_ENGINE_FORCE = 200
@@ -156,7 +156,7 @@ func _physics_process(delta):
 		turbo_text.add_color_override("font_color", Color(0, 255, 0))
 	else:
 		turbo_text.add_color_override("font_color", Color(255, 165, 0, 255))
-	if driver:
+	if driver != -1:
 		if driver == get_tree().get_network_unique_id():#is_network_master():
 			process_input(delta)
 			hud.visible = true
@@ -185,55 +185,55 @@ func process_input(_delta):
 
 	if (throttle_val_target < 0.0):
 		throttle_val_target = 0.0
-	
+
 	if (brake_val < 0.0):
 		brake_val = 0.0
 
 	# overrules for keyboard
-	if driver == get_tree().get_network_unique_id():
-		if Input.is_action_pressed("movement_forward"):
-			throttle_val_target = 1.0
-		if Input.is_action_pressed("movement_backward"):
-			throttle_val_target = -1.0
-		if Input.is_action_pressed("jump"):
-			brake_val = 1.0
-		if Input.is_action_pressed("movement_left"):
-			steer_val = 1.0
-		elif Input.is_action_pressed("movement_right"):
-			steer_val = -1.0
-		if Input.is_action_pressed("turbo") and turbo_timer.time_left <= 0:
-			turbo_active = true
-			turbo_timer.start()
-			turbo_player.stream = turbo_sound
-			turbo_player.play()
-		if turbo_active == true and turbo_timer.time_left >= 7.8:
-			throttle_val *= 2
-		if Input.is_action_just_pressed("tunes"):
-			if not tunes_player.playing: #If the player is not playing a song
-				if tunes_player.stream_paused: #If paused
-					tunes_player.stream_paused = false #Unpause it
-				else: #Load a new song and play it
-					tunes_player.stream = tunes[song][0]
-					tunes_player.unit_db = tunes[song][1]
-					tunes_player.play()
-			else: #Since it is playing a song, pause that song
-				if tunes_player.stream_paused:
-					tunes_player.stream_paused = false
-				else:
-					tunes_player.stream_paused = true
-		if Input.is_action_just_pressed("next_tune") and tunes_player.playing:
-			song += 1
-			if song >= tunes.size():
-				song = 0
-			tunes_player.stream = tunes[song][0]
-			tunes_player.unit_db = song[1]
-			tunes_player.play()
-		if Input.is_action_just_pressed("prev_tune") and tunes_player.playing:
-			song -= 1
-			if song < 0:
-				song = tunes.size() - 1
-			tunes_player.stream = tunes[song]
-			tunes_player.play()
+#	if driver == get_tree().get_network_unique_id():
+	if Input.is_action_pressed("movement_forward"):
+		throttle_val_target = 1.0
+	if Input.is_action_pressed("movement_backward"):
+		throttle_val_target = -1.0
+	if Input.is_action_pressed("jump"):
+		brake_val = 1.0
+	if Input.is_action_pressed("movement_left"):
+		steer_val = 1.0
+	elif Input.is_action_pressed("movement_right"):
+		steer_val = -1.0
+	if Input.is_action_pressed("turbo") and turbo_timer.time_left <= 0:
+		turbo_active = true
+		turbo_timer.start()
+		turbo_player.stream = turbo_sound
+		turbo_player.play()
+	if turbo_active == true and turbo_timer.time_left >= 7.8:
+		throttle_val *= 2
+	if Input.is_action_just_pressed("tunes"):
+		if not tunes_player.playing: #If the player is not playing a song
+			if tunes_player.stream_paused: #If paused
+				tunes_player.stream_paused = false #Unpause it
+			else: #Load a new song and play it
+				tunes_player.stream = tunes[song][0]
+				tunes_player.unit_db = tunes[song][1]
+				tunes_player.play()
+		else: #Since it is playing a song, pause that song
+			if tunes_player.stream_paused:
+				tunes_player.stream_paused = false
+			else:
+				tunes_player.stream_paused = true
+	if Input.is_action_just_pressed("next_tune") and tunes_player.playing:
+		song += 1
+		if song >= tunes.size():
+			song = 0
+		tunes_player.stream = tunes[song][0]
+		tunes_player.unit_db = song[1]
+		tunes_player.play()
+	if Input.is_action_just_pressed("prev_tune") and tunes_player.playing:
+		song -= 1
+		if song < 0:
+			song = tunes.size() - 1
+		tunes_player.stream = tunes[song]
+		tunes_player.play()
 
 	if not get_tree().is_network_server():
 		rpc_unreliable_id(1, "update_applied_stuff", driver, engine_force, steer_angle, engine_RPM, throttle_val)

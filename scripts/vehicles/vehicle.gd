@@ -398,5 +398,9 @@ func get_speed_kph():
 	return current_speed_mps * 3600.0 / 1000.0
 
 
+func set_driver(drv):
+	driver = drv
+
+
 func _on_self_destruct_timeout():
 	queue_free()

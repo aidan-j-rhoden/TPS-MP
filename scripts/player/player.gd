@@ -186,8 +186,8 @@ func _physics_process(delta):
 	if is_network_master():
 		if not is_dead:
 			process_input(delta)
-		if !is_in_vehicle and not is_dead:
-			process_movement(delta)
+			if !is_in_vehicle:
+				process_movement(delta)
 		if not get_tree().is_network_server():
 			rpc_unreliable_id(1, "process_animations", is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
 		process_animations(is_in_vehicle, is_grounded, is_climbing, is_dancing, is_aiming, weapon_equipped, hvel.length(), camera_x_rot, camera_y_rot)
@@ -482,21 +482,18 @@ remotesync func enter_vehicle():
 					voice_player.stream = pain_sound #Temp
 					voice_player.play()
 				else:
-#					if not get_tree().is_network_server():
-#						rpc_id(1, "enter_vehicle")
-#					else:
-#						enter_vehicle()
 					#camera.translation = Vector3(0.5, -0.1, 0.2) #Edit this
 					camera.translation = Vector3(0, 0, 5)
 					vehicle = ray_vehicles.get_collider()
+
 					get_parent().remove_child(self)
 					vehicle.add_child(self)
-					self.add_collision_exception_with(vehicle)
+					self.add_collision_exception_with(vehicle) # So you can still get hit, but not by your own vehicle
 
-					vehicle.driver = get_tree().get_network_unique_id()
+					vehicle.set_driver(get_tree().get_network_unique_id())
+
 					global_transform.origin = vehicle.transform.origin + vehicle.transform.basis.x * 0.5 + vehicle.transform.basis.y * 1.75
 
-					vehicle.driver = self.get_tree().get_network_unique_id()
 #					vehicle.set_network_master(int(self.get_name()))
 					shape.rotation.y = vehicle.get_node("body").transform.basis.get_euler().y
 
@@ -603,7 +600,7 @@ remotesync func hurt(damage):
 
 
 remotesync func die():
-	if !is_dead:
+	if not is_dead:
 		if is_network_master():
 			death_canvas.visible = true
 			$hud/death_canvas/animation_player.play("die")
@@ -634,7 +631,7 @@ remotesync func die():
 		is_dead = true
 		get_node("timer_respawn").start()
 		get_node("shape").disabled = true
-	vel = Vector3(0, 0, 0)
+		vel = Vector3(0, 0, 0)
 
 
 func set_health(value):
